@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>稀饭文案专用编辑器</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            padding: 25px;
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .description {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+        
+        .draggable-container {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .draggable-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            position: relative;
+        }
+        
+        .drag-handle {
+            padding: 20px;
+            cursor: grab;
+            color: #7f8c8d;
+            font-size: 36px;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 60px;
+            position: relative;
+        }
+        
+        /* 添加竖线分隔符 */
+        .drag-handle::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 60%; /* 缩短竖线高度 */
+            width: 2px;
+            background-color: #7f8c8d;
+        }
+        
+        .draggable-item textarea {
+            flex: 1;
+            min-height: 100px;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            resize: vertical;
+            font-size: 15px;
+            line-height: 1.5;
+            transition: border-color 0.3s;
+            outline: none;
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+        }
+        
+        .fixed-item {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed #ccc;
+            position: relative;
+        }
+        
+        .fixed-item textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #000;
+            border-radius: 8px;
+            resize: vertical;
+            font-size: 15px;
+            line-height: 1.5;
+            transition: border-color 0.3s;
+            outline: none;
+        }
+        
+        .fixed-item textarea:focus,
+        .draggable-item textarea:focus {
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+        
+        .item-label {
+            color: white;
+            padding: 5px 12px;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0 12px;
+            border-radius: 4px;
+            white-space: nowrap;
+            width: 80px; /* 固定宽度 */
+            text-align: center;
+            flex-shrink: 0; /* 防止缩小 */
+        }
+        
+        .label-single {
+            background: #a981f7;
+        }
+        
+        .label-random {
+            background: #11c668;
+        }
+        
+        .label-link {
+            background: #ff695a;
+        }
+        
+        .fixed-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .dragging {
+            opacity: 0.7;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+            transform: rotate(3deg);
+        }
+        
+        .drag-over {
+            border-top: 2px solid #4a90e2;
+        }
+        
+        .instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            line-height: 1.6;
+            border-left: 4px solid #4a90e2;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            min-width: 160px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .btn:hover:after {
+            animation: ripple 1s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 1;
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(40, 40);
+            }
+        }
+        
+        .btn-generate {
+            background: linear-gradient(to right, #27ae60, #2ecc71);
+        }
+        
+        .btn-generate:hover {
+            background: linear-gradient(to right, #219653, #27ae60);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(39, 174, 96, 0.3);
+        }
+        
+        .btn-reset {
+            background: linear-gradient(to right, #e74c3c, #e67e22);
+        }
+        
+        .btn-reset:hover {
+            background: linear-gradient(to right, #c0392b, #d35400);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(231, 76, 60, 0.3);
+        }
+
+        .toast {
+            position: fixed;
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            text-align: center;
+            width: auto;
+            min-width: 200px;
+            transform: translate(-50%, -50%);
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        @media (pointer: coarse) {
+            .draggable-item {
+                background: #f0f0f0;
+            }
+
+            .draggable-item textarea {
+                background: #f0f0f0;
+            }
+
+            .drag-handle {
+                background: #f0f0f0;
+            }
+        }
+
+        @media (pointer: fine) {
+            .draggable-item {
+                background: #e0e0e0;
+            }
+
+            .draggable-item textarea {
+                background: #e0e0e0;
+            }
+
+            .drag-handle {
+                background: #e0e0e0;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .drag-handle {
+                padding: 15px;
+                font-size: 28px;
+                min-width: 50px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 280px;
+            }
+            
+            .item-label {
+                font-size: 12px;
+                padding: 5px 8px;
+                margin: 0 8px;
+                width: 60px; /* 移动端调整宽度 */
+            }
+            
+            .drag-handle::after {
+                height: 50%; /* 在移动设备上进一步缩短竖线 */
+            }
+            
+            .toast {
+                min-width: 150px;
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>稀饭文案专用编辑器</h1>
+    <p class="description">文本框可通过拖拽图标调整顺序</p>
+    
+    <div class="container">
+        <div class="instructions">
+            <strong>使用说明：</strong> 拖动文本框左侧的拖拽图标(⋮⋮)可以调整文案的顺序。输入内容后点击"生成并复制"，将输出适用稀饭的文案，并自动复制到剪贴板。
+        </div>
+        
+        <div class="draggable-container" id="draggable-container">
+        </div>
+        
+        <div class="fixed-item">
+            <span class="fixed-label">输出结果</span>
+            <textarea id="output-textarea" placeholder="生成的结果将显示在这里..."></textarea>
+        </div>
+        
+        <div class="actions">
+            <button class="btn btn-generate" id="generate-btn">生成并复制</button>
+            <button class="btn btn-reset" id="reset-btn">重置所有内容</button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const draggableContainer = document.getElementById('draggable-container');
+            const outputTextarea = document.getElementById('output-textarea');
+            const toast = document.getElementById('toast');
+            const generateBtn = document.getElementById('generate-btn');
+            const fixedItem = document.querySelector('.fixed-item');
+
+            let scrollInterval = null;
+            let isDragging = false;
+            const scrollThreshold = 50;
+            const scrollSpeed = 15;
+            
+            function showToast(message, isSuccess = true) {
+                toast.classList.remove('show');
+                
+                toast.textContent = message;
+                toast.style.backgroundColor = isSuccess ? '#11c668' : '#ff695a';
+                
+                const outputRect = outputTextarea.getBoundingClientRect();
+                const fixedItemRect = fixedItem.getBoundingClientRect();
+                
+                const toastTop = fixedItemRect.top + (fixedItemRect.height / 2) + 25;
+                const toastLeft = fixedItemRect.left + (fixedItemRect.width / 2);
+                
+                toast.style.position = 'fixed';
+                toast.style.top = toastTop + 'px';
+                toast.style.left = toastLeft + 'px';
+                
+                requestAnimationFrame(() => {
+                    toast.classList.add('show');
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                    }, 2000);
+                });
+            }
+            
+            const labelTypes = [
+                {type: "single", text: "固定文案", class: "label-single"},
+                {type: "random", text: "随机文案", class: "label-random"},
+                {type: "link", text: "链接", class: "label-link"},
+                {type: "single", text: "固定文案", class: "label-single"},
+                {type: "random", text: "随机文案", class: "label-random"},
+                {type: "link", text: "链接", class: "label-link"}
+            ];
+            
+            for (let i = 0; i < 6; i++) {
+                createDraggableItem(i, labelTypes[i]);
+            }
+            
+            function createDraggableItem(index, labelType) {
+                const draggableItem = document.createElement('div');
+                draggableItem.className = 'draggable-item';
+                draggableItem.dataset.index = index;
+                draggableItem.dataset.type = labelType.type;
+                
+                const itemLabel = document.createElement('div');
+                itemLabel.className = `item-label ${labelType.class}`;
+                itemLabel.textContent = labelType.text;
+                
+                const dragHandle = document.createElement('div');
+                dragHandle.className = 'drag-handle';
+                dragHandle.innerHTML = '⋮⋮';
+                dragHandle.draggable = true;
+                
+                const textarea = document.createElement('textarea');
+                textarea.placeholder = `请输入${labelType.text}...`;
+                
+                if (labelType.type === 'link') {
+                    textarea.placeholder = `请输入${labelType.text}，多个链接请换行分隔...`;
+                } else if (labelType.type === 'random') {
+                    textarea.placeholder = `请输入${labelType.text}，多个文案请换行分隔...`;
+                }
+                
+                const savedData = localStorage.getItem(`draggable-item-${index}`);
+                if (savedData) {
+                    textarea.value = savedData;
+                }
+                
+                textarea.addEventListener('input', function() {
+                    localStorage.setItem(`draggable-item-${index}`, this.value);
+                });
+                
+                textarea.addEventListener('paste', function(e) {
+                    if (labelType.type === 'single') {
+                        e.preventDefault();
+                        let text = e.clipboardData.getData('text/plain');
+                        text = text.replace(/\r?\n/g, ' ');
+                        document.execCommand('insertText', false, text);
+                        this.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                });
+                
+                if (labelType.type === 'single') {
+                    textarea.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                        }
+                    });
+                    
+                    textarea.addEventListener('input', function() {
+                        if (this.value.includes('\n')) {
+                            this.value = this.value.replace(/\r?\n/g, ' ');
+                            this.dispatchEvent(new Event('input', { bubbles: true }));
+                        }
+                    });
+                }
+                
+                draggableItem.appendChild(itemLabel);
+                draggableItem.appendChild(dragHandle);
+                draggableItem.appendChild(textarea);
+                
+                draggableContainer.appendChild(draggableItem);
+                
+                dragHandle.addEventListener('dragstart', handleDragStart);
+                dragHandle.addEventListener('dragend', handleDragEnd);
+                
+                draggableItem.addEventListener('dragover', handleDragOver);
+                draggableItem.addEventListener('dragenter', handleDragEnter);
+                draggableItem.addEventListener('dragleave', handleDragLeave);
+                draggableItem.addEventListener('drop', handleDrop);
+            }
+            
+            let draggedItem = null;
+            
+            function handleDragStart(e) {
+                draggedItem = this.parentElement;
+                draggedItem.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', draggedItem.dataset.index);
+
+                isDragging = true;
+                document.addEventListener('dragover', handleAutoScroll);
+            }
+            
+            function handleDragEnd() {
+                if (draggedItem) {
+                    draggedItem.classList.remove('dragging');
+                }
+                const items = document.querySelectorAll('.draggable-item');
+                items.forEach(item => item.classList.remove('drag-over'));
+
+                isDragging = false;
+                stopAutoScroll();
+                document.removeEventListener('dragover', handleAutoScroll);
+            }
+            
+            function handleDragOver(e) {
+                e.preventDefault();
+                return false;
+            }
+            
+            function handleDragEnter(e) {
+                e.preventDefault();
+                this.classList.add('drag-over');
+            }
+            
+            function handleDragLeave() {
+                this.classList.remove('drag-over');
+            }
+            
+            function handleDrop(e) {
+                e.preventDefault();
+                if (draggedItem && draggedItem !== this) {
+                    const allItems = Array.from(draggableContainer.querySelectorAll('.draggable-item'));
+                    const thisIndex = allItems.indexOf(this);
+                    const draggedIndex = allItems.indexOf(draggedItem);
+                    
+                    if (draggedIndex < thisIndex) {
+                        draggableContainer.insertBefore(draggedItem, this.nextSibling);
+                    } else {
+                        draggableContainer.insertBefore(draggedItem, this);
+                    }
+                }
+                this.classList.remove('drag-over');
+                return false;
+            }
+
+            function handleAutoScroll(e) {
+                if (!isDragging) return;
+                
+                const mouseY = e.clientY;
+                
+                const windowHeight = window.innerHeight;
+                
+                const distanceFromTop = mouseY;
+                const distanceFromBottom = windowHeight - mouseY;
+                
+                let scrollDirection = 0;
+                
+                if (distanceFromTop < scrollThreshold) {
+                    scrollDirection = -1;
+                } else if (distanceFromBottom < scrollThreshold) {
+                    scrollDirection = 1;
+                }
+                
+                if (scrollDirection !== 0) {
+                    const speedMultiplier = scrollDirection === -1 
+                        ? (scrollThreshold - distanceFromTop) / scrollThreshold * 2
+                        : (scrollThreshold - distanceFromBottom) / scrollThreshold * 2;
+                    
+                    startAutoScroll(scrollDirection, speedMultiplier);
+                } else {
+                    stopAutoScroll();
+                }
+            }
+            
+            function startAutoScroll(direction, speedMultiplier) {
+                if (scrollInterval !== null) return;
+                let lastScrollTime = performance.now();
+                
+                function scrollStep(timestamp) {
+                    if (!isDragging) {
+                        stopAutoScroll();
+                        return;
+                    }
+                    
+                    const now = performance.now();
+                    const elapsed = now - lastScrollTime;
+                    
+                    if (elapsed > 16) {
+                        const scrollAmount = direction * scrollSpeed * speedMultiplier;
+                        window.scrollBy(0, scrollAmount);
+                        lastScrollTime = now;
+                    }
+                    
+                    scrollInterval = requestAnimationFrame(scrollStep);
+                }
+                
+                scrollInterval = requestAnimationFrame(scrollStep);
+            }
+            
+            function stopAutoScroll() {
+                if (scrollInterval !== null) {
+                    cancelAnimationFrame(scrollInterval);
+                    scrollInterval = null;
+                }
+            }
+            
+            function updateLocalStorageOrder() {
+                const items = draggableContainer.querySelectorAll('.draggable-item');
+                items.forEach((item, index) => {
+                    const textarea = item.querySelector('textarea');
+                    localStorage.setItem(`draggable-item-${index}`, textarea.value);
+                    item.dataset.index = index;
+                });
+            }
+            
+            generateBtn.addEventListener('click', function() {
+                const items = draggableContainer.querySelectorAll('.draggable-item');
+                let allContent = "";
+                
+                items.forEach((item, index) => {
+                    const textarea = item.querySelector('textarea');
+                    const content = textarea.value.trim();
+                    
+                    if (content) {
+                        if (item.dataset.type === "link") {
+                            const linkContent = processLinkContent(content);
+                            allContent += linkContent + "\n\n";
+                        } else {
+                            allContent += content + "\n\n";
+                        }
+                    }
+                });
+                
+                allContent = allContent.trim();
+                
+                outputTextarea.value = allContent;
+                
+                if (allContent) {
+                    copyToClipboard(allContent);
+                } else {
+                    showToast('没有内容可复制', false);
+                }
+            });
+            
+            function copyToClipboard(text) {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                
+                textarea.select();
+                textarea.setSelectionRange(0, 99999);
+                
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        showToast('内容已成功复制到剪贴板！');
+                    } else {
+                        showToast('复制失败，请手动复制', false);
+                    }
+                } catch (err) {
+                    try {
+                        navigator.clipboard.writeText(text).then(function() {
+                            showToast('内容已成功复制到剪贴板！');
+                        }, function(err) {
+                            showToast('复制失败: ' + err, false);
+                        });
+                    } catch (e) {
+                        showToast('复制失败，请手动复制', false);
+                    }
+                }
+                
+                document.body.removeChild(textarea);
+            }
+            
+            function processLinkContent(content) {
+                const links = content.split('\n').filter(link => link.trim() !== '');
+                
+                if (links.length === 0) return "";
+                
+                const commonPrefix = findCommonPrefix(links);
+                
+                let result = "";
+                
+                if (commonPrefix && commonPrefix.length > 0) {
+                    result += commonPrefix + "\n\n";
+                    links.forEach(link => {
+                        const remaining = link.substring(commonPrefix.length);
+                        result += remaining + "\n";
+                    });
+                } else {
+                    links.forEach(link => {
+                        result += link + "\n";
+                    });
+                }
+                
+                return result.trim();
+            }
+            
+            function findCommonPrefix(strings) {
+                if (strings.length === 0) return "";
+                strings.sort((a, b) => a.length - b.length);
+                const shortest = strings[0];
+                
+                let prefix = "";
+                for (let i = 0; i < shortest.length; i++) {
+                    const char = shortest[i];
+                    for (let j = 1; j < strings.length; j++) {
+                        if (strings[j][i] !== char) {
+                            return prefix;
+                        }
+                    }
+                    prefix += char;
+                }
+                
+                return prefix;
+            }
+            
+            document.getElementById('reset-btn').addEventListener('click', function() {
+                const textareas = document.querySelectorAll('textarea');
+                textareas.forEach((textarea, index) => {
+                    textarea.value = '';
+                });
+                localStorage.clear();
+                showToast('所有内容已重置');
+            });
+        });
+    </script>
+</body>
+</html>
