@@ -100,6 +100,7 @@
             outline: none;
             white-space: pre-wrap;
             overflow-wrap: break-word;
+            overflow: hidden;
         }
         
         .fixed-item {
@@ -275,6 +276,31 @@
             opacity: 1;
         }
 
+        .newline-btn {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: #51a1ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+            z-index: 10;
+        }
+        
+        .newline-btn:hover {
+            opacity: 1;
+        }
+        
+        /* 固定文案输入框容器添加相对定位 */
+        .draggable-item[data-type="single"] {
+            position: relative;
+        }
+
         @media (pointer: coarse) {
             .draggable-item {
                 background: #f0f0f0;
@@ -353,7 +379,7 @@
     
     <div class="container">
         <div class="instructions">
-            <strong>使用说明：</strong> 拖动文本框左侧的拖拽图标(⋮⋮)可以调整文案的顺序。输入内容后点击"生成并复制"，将输出适用稀饭的文案，并自动复制到剪贴板。
+            <strong>使用说明：</strong> 拖动文本框左侧的拖拽图标(⋮⋮)可以调整文案的顺序。输入内容后点击"生成并复制"，将输出适用稀饭的文案，并自动复制到剪贴板。<br>固定文案输入框中，点击添加换行，可以添加换行标记，生成的文案发出去就会显示换行效果。
         </div>
         
         <div class="draggable-container" id="draggable-container">
@@ -412,10 +438,10 @@
             const labelTypes = [
                 {type: "single", text: "固定文案", class: "label-single"},
                 {type: "random", text: "随机文案", class: "label-random"},
-                {type: "link", text: "链接", class: "label-link"},
+                {type: "link", text: "随机链接", class: "label-link"},
                 {type: "single", text: "固定文案", class: "label-single"},
                 {type: "random", text: "随机文案", class: "label-random"},
-                {type: "link", text: "链接", class: "label-link"}
+                {type: "link", text: "随机链接", class: "label-link"}
             ];
             
             for (let i = 0; i < 6; i++) {
@@ -438,10 +464,10 @@
                 dragHandle.draggable = true;
                 
                 const textarea = document.createElement('textarea');
-                textarea.placeholder = `请输入${labelType.text}...`;
+                textarea.placeholder = `请输入${labelType.text + '/链接'}...`;
                 
                 if (labelType.type === 'link') {
-                    textarea.placeholder = `请输入${labelType.text}，多个链接请换行分隔...`;
+                    textarea.placeholder = `请输入${labelType.text}，多个随机链接请换行分隔...`;
                 } else if (labelType.type === 'random') {
                     textarea.placeholder = `请输入${labelType.text}，多个文案请换行分隔...`;
                 }
@@ -478,6 +504,29 @@
                             this.dispatchEvent(new Event('input', { bubbles: true }));
                         }
                     });
+
+                    const newlineBtn = document.createElement('button');
+                    newlineBtn.className = 'newline-btn';
+                    newlineBtn.textContent = '添加换行';
+                    newlineBtn.title = '插入【换行】标记';
+                    
+                    newlineBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const startPos = textarea.selectionStart;
+                        const endPos = textarea.selectionEnd;
+                        const currentValue = textarea.value;
+
+                        textarea.value = currentValue.substring(0, startPos) + '【换行】' + currentValue.substring(endPos);
+                        
+                        textarea.selectionStart = startPos + 4;
+                        textarea.selectionEnd = startPos + 4;
+                        
+                        textarea.focus();
+
+                        textarea.dispatchEvent(new Event('input', { bubbles: true }));
+                    });
+                    
+                    draggableItem.appendChild(newlineBtn);
                 }
                 
                 draggableItem.appendChild(itemLabel);
@@ -633,7 +682,7 @@
                             const linkContent = processLinkContent(content);
                             allContent += linkContent + "\n\n";
                         } else {
-                            allContent += content + "\n\n";
+                            allContent += content + " \n\n";
                         }
                     }
                 });
@@ -686,18 +735,37 @@
                 
                 if (links.length === 0) return "";
                 
-                const commonPrefix = findCommonPrefix(links);
+                let weiboCount = 0;
+                let tcnCount = 0;
+                
+                links.forEach(link => {
+                    if (link.startsWith("https://video.weibo.com/show?fid=")) {
+                        weiboCount++;
+                    } else if (link.startsWith("http://t.cn/")) {
+                        tcnCount++;
+                    }
+                });
+                
+                let filteredLinks = links;
+                if (weiboCount > tcnCount) {
+                    filteredLinks = links.filter(link => !link.startsWith("http://t.cn/"));
+                } else {
+                    filteredLinks = links.filter(link => !link.startsWith("https://video.weibo.com/show?fid="));
+                }
+                
+                const commonPrefix = findCommonPrefix(filteredLinks);
                 
                 let result = "";
                 
                 if (commonPrefix && commonPrefix.length > 0) {
                     result += commonPrefix + "\n\n";
-                    links.forEach(link => {
+                    
+                    filteredLinks.forEach(link => {
                         const remaining = link.substring(commonPrefix.length);
                         result += remaining + "\n";
                     });
                 } else {
-                    links.forEach(link => {
+                    filteredLinks.forEach(link => {
                         result += link + "\n";
                     });
                 }
@@ -735,5 +803,4 @@
         });
     </script>
 </body>
-
 </html>
