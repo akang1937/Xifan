@@ -100,7 +100,7 @@
             outline: none;
             white-space: pre-wrap;
             overflow-wrap: break-word;
-            overflow: hidden;
+            overflow: auto;
             word-break: break-all;
         }
         
@@ -373,6 +373,10 @@
                 font-size: 14px;
             }
         }
+
+        textarea::-webkit-scrollbar {
+            display: none; /* 隐藏滚动条 */
+        }
     </style>
 </head>
 <body>
@@ -480,6 +484,15 @@
                 }
                 
                 textarea.addEventListener('input', function() {
+                    if (labelType.type === 'random' || labelType.type === 'link') {
+                        if (this.value.includes('\n\n')) {
+                            this.value = this.value.replace(/\n{2,}/g, '\n');
+                            const cursorPos = this.selectionStart;
+                            this.selectionStart = cursorPos;
+                            this.selectionEnd = cursorPos;
+                        }
+                    }
+                    
                     localStorage.setItem(`draggable-item-${index}`, this.value);
                 });
                 
@@ -530,6 +543,19 @@
                     
                     draggableItem.appendChild(newlineBtn);
                 }
+
+                textarea.addEventListener('wheel', function(e) {
+                    if (this.scrollHeight > this.clientHeight) {
+                        const isAtTop = this.scrollTop === 0;
+                        const isAtBottom = this.scrollTop + this.clientHeight >= this.scrollHeight - 1;
+                        
+                        if ((e.deltaY < 0 && isAtTop) || (e.deltaY > 0 && isAtBottom)) {
+                            return;
+                        }
+                        
+                        e.stopPropagation();
+                    }
+                }, { passive: false });
                 
                 draggableItem.appendChild(itemLabel);
                 draggableItem.appendChild(dragHandle);
@@ -806,6 +832,7 @@
     </script>
 </body>
 </html>
+
 
 
 
