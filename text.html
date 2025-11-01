@@ -707,7 +707,7 @@
                     
                     if (content) {
                         if (item.dataset.type === "link") {
-                            const linkContent = processLinkContent(content);
+                            const linkContent = content;
                             allContent += linkContent + "\n\n";
                         } else {
                             allContent += content + " \n\n";
@@ -758,49 +758,6 @@
                 document.body.removeChild(textarea);
             }
             
-            function processLinkContent(content) {
-                const links = content.split('\n').filter(link => link.trim() !== '');
-                
-                if (links.length === 0) return "";
-                
-                let weiboCount = 0;
-                let tcnCount = 0;
-                
-                links.forEach(link => {
-                    if (link.startsWith("https://video.weibo.com/show?fid=")) {
-                        weiboCount++;
-                    } else if (link.startsWith("http://t.cn/")) {
-                        tcnCount++;
-                    }
-                });
-                
-                let filteredLinks = links;
-                if (weiboCount > tcnCount) {
-                    filteredLinks = links.filter(link => !link.startsWith("http://t.cn/"));
-                } else {
-                    filteredLinks = links.filter(link => !link.startsWith("https://video.weibo.com/show?fid="));
-                }
-                
-                const commonPrefix = findCommonPrefix(filteredLinks);
-                
-                let result = "";
-                
-                if (commonPrefix && commonPrefix.length > 0) {
-                    result += commonPrefix + "\n\n";
-                    
-                    filteredLinks.forEach(link => {
-                        const remaining = link.substring(commonPrefix.length);
-                        result += remaining + "\n";
-                    });
-                } else {
-                    filteredLinks.forEach(link => {
-                        result += link + "\n";
-                    });
-                }
-                
-                return result.trim();
-            }
-            
             function findCommonPrefix(strings) {
                 if (strings.length === 0) return "";
                 strings.sort((a, b) => a.length - b.length);
@@ -832,6 +789,7 @@
     </script>
 </body>
 </html>
+
 
 
 
