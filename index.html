@@ -306,6 +306,17 @@ tr {
     display: block;
 }
 
+.Hide {
+    display: none;
+}
+
+wistia-player {
+  margin: 20px 32px 20px 0px;
+    border: 5px solid #868686;
+    border-radius: 16px;
+    display: inline-block;
+}
+
   </style>
 <body>
   <div class="y">
@@ -324,7 +335,7 @@ tr {
   <br>
 <div class="b">
   <div class="x"><button id="button1" class="button">产品介绍</button><button id="button3" class="button">使用说明</button></div><br>
-  <div id="first">
+  <div id="first1">
     <hr class="hr1">
   <br>
   <span class="e">【活动】：</span><span class="n">新用户七天免费试用！</span><br>
@@ -409,116 +420,27 @@ tr {
   <br>
   <img src="楼中楼1.jpg" style="width: 260px; margin-right: 20px; border: 5px solid #868686; border-radius: 30px;"></img>
   <img src="楼中楼2.jpg" style="width: 260px; margin-right: 20px; border: 5px solid #868686; border-radius: 30px;"></img>
+   <br>
+  <br>
+  <br>
+  <br>
+  <span class="a">视频教程</span><br><br><br>
+  <wistia-player media-id="6knjtm8cf0" wistia-popover="true" aspect="0.5625" style="width: 200px;height: 356px;"></wistia-player>
+  <wistia-player media-id="a7cng3n64r" wistia-popover="true" aspect="0.5625" style="width: 200px;height: 356px;"></wistia-player>
+  <wistia-player media-id="4ujly3oeli" wistia-popover="true" aspect="0.5625" style="width: 200px;height: 356px;"></wistia-player>
+  <wistia-player media-id="q4w2uxkx6n" wistia-popover="true" aspect="0.5625" style="width: 200px;height: 356px;"></wistia-player>
+  <br>
+  <wistia-player media-id="461pzps8k0" wistia-popover="true" aspect="0.5625" style="width: 200px;height: 356px;"></wistia-player>
+  <wistia-player media-id="osy88jmqvi" wistia-popover="true" aspect="0.5625" style="width: 200px;height: 356px;"></wistia-player>
+  <wistia-player media-id="qvfujxjl1v" wistia-popover="true" aspect="0.5625" style="width: 200px;height: 356px;"></wistia-player>
   <br>
   <br>
   <br>
   <br>
 </div>
-  <br>
-  <br>
-  <div class="z">客服微信：gotohappy1992</div><br>
 
-</div>
-</body>
-<script>
-document.getElementById('button1').addEventListener('click', () => {
-  (function a() {
-    var parent = document.getElementById("first");
-    parent.innerHTML = `    <hr class="hr1">
-  <br>
-  <span class="e">【活动】：</span><span class="n">新用户七天免费试用！</span><br>
-  <br>
-  <br>
-  <span class="a">产品说明：</span><br><br>
-  <br>
-  <span class="c">1. 官方网站：</span><br><br>
-  <a class="parent" href="https://akang1937.github.io/Xifan" style="color: #0725ff;text-decoration: none;margin-left: 28px;">https://akang1937.github.io/Xifan</a><br>
-  <br>
-  <a class="parent" href="https://xifan.netlify.app" style="color: #0725ff;text-decoration: none;margin-left: 28px;">https://xifan.netlify.app</a><span class="c" style="background: #ffffff00;">（备用官网）</span><br>
-  <br>
-  <br>
-  <span class="c">2. 特色功能：</span><br><br>
-              <a class="dd">发帖</a>
-              <a class="dd">转发</a>
-              <a class="dd">增评</a>
-              <a class="dd">点赞（内、外）</a>
-              <a class="dd">超Like（可捞指定分区、抢首评成功率高）</a>
-              <a class="dd">互评捞帖</a>
-              <a class="dd">接龙链接自动汇总（无需会员，免费使用）</a>
-              <a class="dd">超话签到</a>
-              <a class="dd">楼中楼增评</a>
-              <a class="dd">楼中楼点赞</a>
-              <a class="dd">净化词条（可设置多个词条）</a><br>
-              <a class="dd">多开账号</a>
-              <a class="dd">自动切号</a>
-              <a class="dd">全天候循环操作</a>
-              <a class="dd">文案重复自动纠错</a>
-              <a class="dd">操作频繁智能处理</a>
-              <a class="dd"> 云端备份/恢复账号</a>
-              <a class="dd"> 可随机文案</a>
-              <a class="dd"> 可设置常用文案</a>
-  <br>
-  <span class="c">3. 可用设备：</span> 安卓手机，windows电脑。<br>
-  <br>
-  <span class="c">4. 运行环境：</span> 前台运行，后台运行，锁屏运行都可以。<a style="font-weight: 700; color: #6b6a6a;">（手机端需要将稀饭App设置为“允许后台运行”）</a><br>
-  <br>
-  <br>
-  <br>
-  <span class="a">稀饭专用文案编辑器：</span><br><br>
-  <br>
-  <span class="c">前往编辑器：</span>
-  <a class="parent" href="https://akang1937.github.io/Xifan/text" style="color: #0725ff;text-decoration: none;margin-left: 14px;">https://akang1937.github.io/Xifan/text</a><br>
-  <br>
-  <br>
-  <br>
-  <span class="a">下载：</span><br><br>
-  <br>
-  <span class="u" style="font-weight: 700;">Android： </span><a class="parent" target="_blank" href="https://bitbucket.org/xifanworker/apk/raw/main/xifan.apk" style="color: #0725ff;text-decoration: none;"> &nbsp&nbsp xifan.apk</a>&nbsp&nbsp<a>（后台 / 锁屏运行的设置方法 -> <span style="color: #0725ff;text-decoration: none;border: none;background: #ffffff00;" onclick="document.getElementById('button3').click(); document.getElementById('setMethod').scrollIntoView()">手机端设置方法</span>）</a><br><br>
-  <span class="u" style="font-weight: 700;">Windows： </span><a class="parent" target="_blank" href="https://bitbucket.org/xifanworker/apk/raw/main/xifan.exe" style="color: #0725ff;text-decoration: none"> &nbsp&nbsp xifan.exe</a><br><br>
-  <br>
-  <br>
-  <br>
-    <span class="a">图文教程</span><br><br><br>
-  <span class="c">注册：</span><br>
-  <br>
-  <img src="注册1.jpg" style="width: 260px; margin-right: 20px; border: 5px solid #868686; border-radius: 30px;"></img>
-  <img src="注册2.jpg" style="width: 260px; margin-right: 20px; border: 5px solid #868686; border-radius: 30px;"></img>
-  <img src="注册3.jpg" style="width: 260px; border: 5px solid #868686; border-radius: 30px;"></img>
-  <br>
-  <br>
-  <br>
-  <span class="c">添加账号：</span><br>
-  <br>
-  <img src="添加账号1.jpg" style="width: 260px; margin-right: 20px; border: 5px solid #868686; border-radius: 30px;"></img>
-  <img src="添加账号2.jpg" style="width: 260px; margin-right: 20px; border: 5px solid #868686; border-radius: 30px;"></img>
-  <br>
-  <br>
-  <br>
-  <span class="c">运行：</span><br>
-  <br>
-  <img src="运行1.jpg" style="width: 260px; margin-right: 20px; border: 5px solid #868686; border-radius: 30px;"></img>
-  <img src="运行2.jpg" style="width: 260px; margin-right: 20px; border: 5px solid #868686; border-radius: 30px;"></img>
-  <img src="运行3.jpg" style="width: 260px; border: 5px solid #868686; border-radius: 30px;"></img>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <span class="c">楼中楼增评：</span><br>
-  <br>
-  <img src="楼中楼1.jpg" style="width: 260px; margin-right: 20px; border: 5px solid #868686; border-radius: 30px;"></img>
-  <img src="楼中楼2.jpg" style="width: 260px; margin-right: 20px; border: 5px solid #868686; border-radius: 30px;"></img>
-  <br>
-  <br>
-  <br>
-  <br>`;
-})()
-  });
-
-  document.getElementById('button3').addEventListener('click', () => {
-  (function a() {
-    var parent = document.getElementById("first");
-    parent.innerHTML = `<hr class="hr3">
+<div id="first2">
+    <hr class="hr3">
   <span class="a">使用说明</span><br><br>
   <br>
   <div><span class="c">1. 绑定设备：</span><br><br><span class="cc">每个（稀饭）账号都是绑定设备的。在设备上登录账号后，一旦激活就会绑定该设备。</span></div><br>
@@ -627,10 +549,29 @@ document.getElementById('button1').addEventListener('click', () => {
   2.账号列表中有显示【小号】字样的账号。将这种空号删除，重新打开稀饭开关运行即可。</span></div><br>
   <br>
   <div><span class="d">8. 如果忘记稀饭账号的密码了怎么办？</span><br><br>
-    <span class="cc">联系客服，发送您的稀饭账号，告诉客服需要找回密码。客服会将稀饭账号的密码发到您的邮箱中，并通知您。</span></div><br>`;
-})()
-  });
+    <span class="cc">联系客服，发送您的稀饭账号，告诉客服需要找回密码。客服会将稀饭账号的密码发到您的邮箱中，并通知您。</span></div><br>
+</div>
+  
+  <br>
+  <br>
+  <div class="z">客服微信：gotohappy1992</div><br>
+
+</div>
+</body>
+<script>
+    const parent1 = document.getElementById("first1");
+    const parent2 = document.getElementById("first2");
+document.getElementById('button1').addEventListener('click', function () {
+    parent1.classList.toggle('Hide');
+    parent2.classList.toggle('Hide');
+});
+
+document.getElementById('button3').addEventListener('click', function () {
+    parent1.classList.toggle('Hide');
+    parent2.classList.toggle('Hide');
+});
 
   </script>
+  <script src="https://fast.wistia.com/player.js" async></script>
 </html>
 
