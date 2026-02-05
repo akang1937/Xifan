@@ -318,7 +318,7 @@
         updateCharCount(convertedText, convertedCharCount);
         
         function convertLineBreaks(text) {
-            return text.replace(/\r\n|\r|\n/g, '【换行】');
+            return text.replace(/\r\n|\r|\n/g, '【换行】').replace(/\|/g, '');
         }
         
         function performConversion() {
