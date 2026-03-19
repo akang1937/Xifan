@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>文案换行转换器</title>
+    <title>稀饭文案转换器</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -115,6 +115,43 @@
             border-radius: 10px;
         }
         
+        /* 模式切换器 */
+        .mode-switch {
+            display: flex;
+            background-color: #edf2f7;
+            border-radius: 40px;
+            padding: 4px;
+            margin: 15px 0 20px;
+            border: 1px solid #d1d9e6;
+        }
+        
+        .mode-option {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            user-select: none;
+        }
+        
+        .mode-option i {
+            font-size: 1.1rem;
+        }
+        
+        .mode-option.active {
+            background-color: white;
+            color: #11c668;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        
         .controls {
             display: flex;
             justify-content: space-between;
@@ -143,7 +180,7 @@
         }
         
         .btn-primary:hover {
-            background-color: #11c668;
+            background-color: #0fa856;
             transform: translateY(-2px);
         }
         
@@ -153,7 +190,7 @@
         }
         
         .btn-secondary:hover {
-            background-color: #cbd5e0;
+            background: linear-gradient(to right, #d62c1a, #d35f0f);
             transform: translateY(-2px);
         }
         
@@ -186,9 +223,14 @@
             textarea {
                 min-height: 150px;
             }
+
+            .mode-option {
+                padding: 10px 0;
+                font-size: 0.9rem;
+            }
         }
         
-        /* 添加一些动画效果 */
+        /* 动画 */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -241,25 +283,34 @@
             100% { left: 100%; }
         }
 
-@media (pointer: fine) {
-    textarea {
-        background: #f0f0f0;
-    }
-}
+        @media (pointer: fine) {
+            textarea {
+                background: #f0f0f0;
+            }
+        }
 
-@media (pointer: coarse) {
-    textarea {
-        background: #f0f0f0;
-    }
-}
+        @media (pointer: coarse) {
+            textarea {
+                background: #f0f0f0;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>稀饭文案换行转换器</h1>
-            <p class="subtitle">自动将换行符转换为【换行】标记</p>
+            <h1>稀饭文案转换器</h1>
+            <p class="subtitle">换行标记转换 / 提取链接放在末尾</p>
         </header>
+
+        <div class="mode-switch fade-in" style="animation-delay: 0.05s">
+            <div class="mode-option" id="modeLineBreak">
+                <i class="fas fa-exchange-alt"></i> 换行 ➔ 【换行】
+            </div>
+            <div class="mode-option" id="modeLinkExtract">
+                <i class="fas fa-link"></i> 提取链接到末尾
+            </div>
+        </div>
         
         <div class="card fade-in">
             <div class="card-header">
@@ -269,7 +320,7 @@
                 <h2 class="card-title">输入原文案</h2>
             </div>
             <div class="input-container">
-                <textarea id="originalText" placeholder="请在这里粘贴或输入您的原文案，转换会自动进行..."></textarea>
+                <textarea id="originalText" placeholder="请粘贴或输入文案（自动转换）……"></textarea>
                 <div class="char-count">
                     <span id="originalCharCount">0</span> 字符
                 </div>
@@ -284,7 +335,7 @@
                 <h2 class="card-title">转换后结果</h2>
             </div>
             <div class="input-container">
-                <textarea id="convertedText" placeholder="转换后的文案将自动显示在这里..." readonly></textarea>
+                <textarea id="convertedText" placeholder="结果会自动显示……" readonly></textarea>
                 <div class="char-count">
                     <span id="convertedCharCount">0</span> 字符
                 </div>
@@ -306,116 +357,187 @@
     </div>
 
     <script>
-        const originalText = document.getElementById('originalText');
-        const convertedText = document.getElementById('convertedText');
-        const copyBtn = document.getElementById('copyBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const originalCharCount = document.getElementById('originalCharCount');
-        const convertedCharCount = document.getElementById('convertedCharCount');
-        const copyNotification = document.getElementById('copyNotification');
-        
-        updateCharCount(originalText, originalCharCount);
-        updateCharCount(convertedText, convertedCharCount);
-        
-        function convertLineBreaks(text) {
-            return text.replace(/\r\n|\r|\n|\[换行\]/g, '【换行】').replace(/\|/g, ' ');
-        }
-        
-        function performConversion() {
-            const original = originalText.value;
-            const converted = convertLineBreaks(original);
-            convertedText.value = converted;
-            
-            updateCharCount(originalText, originalCharCount);
-            updateCharCount(convertedText, convertedCharCount);
-            
-            showConvertAnimation();
-        }
-        
-        function showConvertAnimation() {
-            const card = document.querySelector('.card:nth-child(4)');
-            card.classList.add('auto-convert-animation');
-            
-            setTimeout(() => {
-                card.classList.remove('auto-convert-animation');
-            }, 1000);
-        }
-        
-        function updateCharCount(textarea, countElement) {
-            const count = textarea.value.length;
-            countElement.textContent = count;
-        }
-        
-        function copyToClipboard() {
-            if (!convertedText.value.trim()) {
-                showNotification('转换结果为空，无法复制！', false);
-                return;
+        (function() {
+            const originalText = document.getElementById('originalText');
+            const convertedText = document.getElementById('convertedText');
+            const copyBtn = document.getElementById('copyBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const originalCharCount = document.getElementById('originalCharCount');
+            const convertedCharCount = document.getElementById('convertedCharCount');
+            const copyNotification = document.getElementById('copyNotification');
+
+            const modeLineBreak = document.getElementById('modeLineBreak');
+            const modeLinkExtract = document.getElementById('modeLinkExtract');
+
+            const STORAGE_KEY = 'preferredConversionMode';
+
+            let currentMode = localStorage.getItem(STORAGE_KEY) || 'lineBreak';
+
+            function updateCharCount(textarea, countElement) {
+                const count = textarea.value.length;
+                countElement.textContent = count;
             }
-            
-            convertedText.select();
-            convertedText.setSelectionRange(0, 99999);
-            
-            try {
-                const successful = document.execCommand('copy');
-                if (successful) {
-                    showNotification('已成功复制到剪贴板！', true);
-                } else {
-                    showNotification('复制失败，请手动选择并复制', false);
+
+            function showNotification(message, isSuccess) {
+                copyNotification.innerHTML = `<i class="fas fa-${isSuccess ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+                copyNotification.style.backgroundColor = isSuccess ? '#11c668' : '#e74c3c';
+                copyNotification.classList.add('show');
+                setTimeout(() => {
+                    copyNotification.classList.remove('show');
+                }, 3000);
+            }
+
+            function showConvertAnimation() {
+                const card = document.querySelector('.card:nth-child(4)');
+                if (card) {
+                    card.classList.add('auto-convert-animation');
+                    setTimeout(() => {
+                        card.classList.remove('auto-convert-animation');
+                    }, 800);
                 }
-            } catch (err) {
-                console.error('复制失败:', err);
-                showNotification('复制失败，请手动选择并复制', false);
             }
-        }
-        
-        function showNotification(message, isSuccess) {
-            copyNotification.innerHTML = `<i class="fas fa-${isSuccess ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
-            copyNotification.style.backgroundColor = isSuccess ? '#11c668' : '#e74c3c';
-            
-            copyNotification.classList.add('show');
-            
-            setTimeout(() => {
-                copyNotification.classList.remove('show');
-            }, 3000);
-        }
-        
-        function clearAll() {
-            originalText.value = '';
-            convertedText.value = '';
+
+            function convertByMode(text) {
+                if (!text) return '';
+
+                if (currentMode === 'lineBreak') {
+                    return text.replace(/\r\n|\r|\n|\[换行\]/g, '【换行】').replace(/\|/g, ' ');
+                } 
+                else {
+                    const urlRegex = /(https?:\/\/[^\s]+|www\.[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}([^\s]*)?)/gi;
+                    
+                    const links = text.match(urlRegex) || [];
+                    
+                    const uniqueLinks = [...new Set(links)];
+                    
+                    let textWithoutLinks = text.replace(urlRegex, '');
+                    
+                    textWithoutLinks = textWithoutLinks.replace(/\n{3,}/g, '\n\n');
+                    
+                    if (uniqueLinks.length === 0) {
+                        return textWithoutLinks.trim();
+                    } else {
+                        const trimmedRest = textWithoutLinks.trimEnd();
+                        if (trimmedRest.length > 0) {
+                            return trimmedRest + '\n\n' + uniqueLinks.join('\n');
+                        } else {
+                            return uniqueLinks.join('\n');
+                        }
+                    }
+                }
+            }
+
+            function performConversion() {
+                const original = originalText.value;
+                const converted = convertByMode(original);
+                convertedText.value = converted;
+
+                updateCharCount(originalText, originalCharCount);
+                updateCharCount(convertedText, convertedCharCount);
+                showConvertAnimation();
+            }
+
+            function applyModeToUI() {
+                if (currentMode === 'lineBreak') {
+                    modeLineBreak.classList.add('active');
+                    modeLinkExtract.classList.remove('active');
+                } else {
+                    modeLinkExtract.classList.add('active');
+                    modeLineBreak.classList.remove('active');
+                }
+            }
+
+            function setActiveMode(mode) {
+                if (mode === currentMode) return;
+
+                currentMode = mode;
+                
+                localStorage.setItem(STORAGE_KEY, mode);
+                
+                applyModeToUI();
+
+                performConversion();
+            }
+
+            modeLineBreak.addEventListener('click', function() {
+                setActiveMode('lineBreak');
+            });
+            modeLinkExtract.addEventListener('click', function() {
+                setActiveMode('linkExtract');
+            });
+
+            applyModeToUI();
+
             updateCharCount(originalText, originalCharCount);
             updateCharCount(convertedText, convertedCharCount);
-            originalText.focus();
-        }
-        
-        let conversionTimeout;
-        originalText.addEventListener('input', function() {
-            updateCharCount(originalText, originalCharCount);
-            
-            if (conversionTimeout) {
-                clearTimeout(conversionTimeout);
+
+            performConversion();
+
+            let conversionTimeout;
+            originalText.addEventListener('input', function() {
+                updateCharCount(originalText, originalCharCount);
+                if (conversionTimeout) clearTimeout(conversionTimeout);
+                conversionTimeout = setTimeout(performConversion, 280);
+            });
+
+            originalText.addEventListener('paste', function() {
+                setTimeout(performConversion, 30);
+            });
+
+            function copyToClipboard() {
+                if (!convertedText.value.trim()) {
+                    showNotification('转换结果为空，无法复制！', false);
+                    return;
+                }
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(convertedText.value).then(() => {
+                        showNotification('已成功复制到剪贴板！', true);
+                    }).catch(() => {
+                        fallbackCopy();
+                    });
+                } else {
+                    fallbackCopy();
+                }
+
+                function fallbackCopy() {
+                    convertedText.select();
+                    convertedText.setSelectionRange(0, 99999);
+                    try {
+                        const successful = document.execCommand('copy');
+                        if (successful) {
+                            showNotification('已成功复制到剪贴板！', true);
+                        } else {
+                            showNotification('复制失败，请手动选择并复制', false);
+                        }
+                    } catch (err) {
+                        console.error('复制失败:', err);
+                        showNotification('复制失败，请手动选择并复制', false);
+                    }
+                }
             }
-            
-            conversionTimeout = setTimeout(performConversion, 300);
-        });
-        
-        copyBtn.addEventListener('click', copyToClipboard);
-        
-        clearBtn.addEventListener('click', clearAll);
-        
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(button => {
-            button.addEventListener('touchstart', function() {
-                this.style.transform = 'scale(0.98)';
+
+            copyBtn.addEventListener('click', copyToClipboard);
+
+            function clearAll() {
+                originalText.value = '';
+                convertedText.value = '';
+                updateCharCount(originalText, originalCharCount);
+                updateCharCount(convertedText, convertedCharCount);
+                originalText.focus();
+            }
+            clearBtn.addEventListener('click', clearAll);
+
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.98)';
+                });
+                button.addEventListener('touchend', function() {
+                    this.style.transform = '';
+                });
             });
-            
-            button.addEventListener('touchend', function() {
-                this.style.transform = '';
-            });
-        });
-        
-        originalText.addEventListener('paste', function() {
-            setTimeout(performConversion, 10);
-        });
+        })();
     </script>
 </body>
 </html>
