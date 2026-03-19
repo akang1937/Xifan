@@ -305,7 +305,7 @@
 
         <div class="mode-switch fade-in" style="animation-delay: 0.05s">
             <div class="mode-option" id="modeLineBreak">
-                <i class="fas fa-exchange-alt"></i> 换行 ➔ 【换行】
+                <i class="fas fa-exchange-alt"></i> 换行符 ➔ 【换行】
             </div>
             <div class="mode-option" id="modeLinkExtract">
                 <i class="fas fa-link"></i> 提取链接到末尾
@@ -397,6 +397,28 @@
                 }
             }
 
+            function extractUrls(text) {
+                const urls = [];
+                
+                const urlRegex = /https?:\/\/[^\s\u4e00-\u9fa5，。、；：""''（）【】《》！？<>「」『』]+/g;
+                
+                let match;
+                while ((match = urlRegex.exec(text)) !== null) {
+                    let url = match[0];
+                    
+                    url = url.replace(/[，。、；：""''（）【】《》！？<>「」『』,.!?;:()\[\]{}]$/, '');
+                    
+                    urls.push(url);
+                }
+                
+                return urls;
+            }
+
+            function removeUrlsFromText(text) {
+                const urlRegex = /https?:\/\/[^\s\u4e00-\u9fa5，。、；：""''（）【】《》！？<>「」『』]+/g;
+                return text.replace(urlRegex, '');
+            }
+
             function convertByMode(text) {
                 if (!text) return '';
 
@@ -404,24 +426,25 @@
                     return text.replace(/\r\n|\r|\n|\[换行\]/g, '【换行】').replace(/\|/g, ' ');
                 } 
                 else {
-                    const urlRegex = /(https?:\/\/[^\s]+|www\.[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}([^\s]*)?)/gi;
+                    const urls = extractUrls(text);
                     
-                    const links = text.match(urlRegex) || [];
+                    const uniqueUrls = [...new Set(urls)];
                     
-                    const uniqueLinks = [...new Set(links)];
+                    let textWithoutUrls = removeUrlsFromText(text);
                     
-                    let textWithoutLinks = text.replace(urlRegex, '');
+                    textWithoutUrls = textWithoutUrls
+                        .replace(/\n{3,}/g, '\n\n')
+                        .replace(/[ \t]+$/gm, '')
+                        .replace(/^\n+/, '')
+                        .replace(/\n+$/, '');
                     
-                    textWithoutLinks = textWithoutLinks.replace(/\n{3,}/g, '\n\n');
-                    
-                    if (uniqueLinks.length === 0) {
-                        return textWithoutLinks.trim();
+                    if (uniqueUrls.length === 0) {
+                        return textWithoutUrls;
                     } else {
-                        const trimmedRest = textWithoutLinks.trimEnd();
-                        if (trimmedRest.length > 0) {
-                            return trimmedRest + '\n\n' + uniqueLinks.join('\n');
+                        if (textWithoutUrls) {
+                            return textWithoutUrls + '\n\n' + uniqueUrls.join('\n');
                         } else {
-                            return uniqueLinks.join('\n');
+                            return uniqueUrls.join('\n');
                         }
                     }
                 }
