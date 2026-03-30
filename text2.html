@@ -14,202 +14,286 @@
         }
         
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            color: #333;
-            line-height: 1.6;
-            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fc 0%, #dfe6f0 100%);
+            color: #0f172a;
+            line-height: 1.5;
+            padding: 24px 20px;
             min-height: 100vh;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
         }
         
         header {
             text-align: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #e0e6ed;
+            margin-bottom: 28px;
+            padding-bottom: 12px;
         }
         
         h1 {
-            color: #2d3748;
-            font-size: 1.8rem;
+            font-size: 1.9rem;
             margin-bottom: 8px;
+            background: linear-gradient(135deg, #0f5e41, #11c668);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: #2d3748;
+            letter-spacing: -0.3px;
         }
         
         .subtitle {
-            color: #718096;
-            font-size: 0.95rem;
+            color: #2c3e50;
+            font-size: 0.9rem;
+            background: rgba(255,255,245,0.8);
+            display: inline-block;
+            padding: 4px 20px;
+            border-radius: 40px;
+            backdrop-filter: blur(2px);
         }
         
         .card {
-            background-color: white;
-            border-radius: 16px;
-            padding: 22px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .card:hover {
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            background-color: rgba(255, 255, 255, 0.98);
+            border-radius: 28px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,250,0.9);
         }
         
         .card-header {
             display: flex;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
         
         .card-icon {
-            width: 40px;
-            height: 40px;
-            background-color: #11c6682b;
-            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            background: #eef7f0;
+            border-radius: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 12px;
+            margin-right: 14px;
             color: #11c668;
-            font-size: 1.2rem;
+            font-size: 1.25rem;
+            flex-shrink: 0;
         }
         
         .card-title {
             font-size: 1.25rem;
-            color: #717274;
             font-weight: 600;
+            color: #1e293b;
+        }
+        
+        /* 关键词区域 - 横向并列布局 */
+        .keyword-section {
+            margin-bottom: 24px;
+        }
+        
+        .keyword-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #fbfdfe;
+            border-radius: 24px;
+            padding: 12px 20px;
+            border: 1px solid #e2edf2;
+        }
+        
+        .keyword-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #eef2ff;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-weight: 600;
+            color: #02b458;
+            font-size: 1rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        .keyword-label i {
+            font-size: 1.1rem;
+        }
+        
+        .keyword-input-wrapper {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        #keywordInput {
+            width: 100%;
+            padding: 14px 20px;
+            border: 1px solid #cbd5e1;
+            border-radius: 60px;
+            font-size: 1rem;
+            background: white;
+            transition: 0.2s;
+            outline: none;
+            line-height: 1.4;
+        }
+        
+        #keywordInput:focus {
+            border-color: #11c668;
+            box-shadow: 0 0 0 3px rgba(17,198,104,0.15);
+        }
+        
+        #keywordInput::placeholder {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+        
+        /* 帮助提示区域 - 保持横向并列 */
+        .helper-notes {
+            margin-top: 12px;
+        }
+        
+        .helper-note {
+            font-size: 0.72rem;
+            color: #4b6a8b;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            flex-wrap: nowrap;
+        }
+        
+        .helper-note:last-child {
+            margin-bottom: 0;
+        }
+        
+        .helper-note i {
+            color: #11c668;
+            margin-top: 2px;
+            flex-shrink: 0;
+            width: 18px;
+            text-align: center;
+        }
+        
+        .helper-note strong {
+            color: #2c3e50;
+        }
+        
+        .helper-note span {
+            flex: 1;
+            line-height: 1.4;
+        }
+        
+        .weibo-badge {
+            background: #fdf2f0;
+            border-left: 3px solid #ff6b6b;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-top: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .weibo-badge i {
+            flex-shrink: 0;
+            margin-top: 2px;
         }
         
         textarea {
             width: 100%;
             border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 16px;
-            font-size: 1rem;
-            resize: none;
+            border-radius: 22px;
+            padding: 18px;
+            font-size: 0.95rem;
+            resize: vertical;
             min-height: 180px;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            line-height: 1.5;
+            transition: all 0.2s;
+            line-height: 1.55;
+            background: #eef2ff;
         }
         
         textarea:focus {
             outline: none;
-            border-color: #4299e1;
-            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+            border-color: #11c668;
+            box-shadow: 0 0 0 3px rgba(17,198,104,0.12);
         }
         
         .input-container {
             position: relative;
         }
         
-        .input-container .char-count {
+        .char-count {
             position: absolute;
-            bottom: 12px;
-            right: 12px;
-            font-size: 0.85rem;
-            color: #a0aec0;
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 2px 6px;
-            border-radius: 10px;
-        }
-        
-        /* 模式切换器 */
-        .mode-switch {
-            display: flex;
-            background-color: #edf2f7;
-            border-radius: 40px;
-            padding: 4px;
-            margin: 15px 0 20px;
-            border: 1px solid #d1d9e6;
-        }
-        
-        .mode-option {
-            flex: 1;
-            text-align: center;
-            padding: 12px 0;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            color: #4a5568;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            user-select: none;
-        }
-        
-        .mode-option i {
-            font-size: 1.1rem;
-        }
-        
-        .mode-option.active {
-            background-color: white;
-            color: #11c668;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            bottom: 14px;
+            right: 18px;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            background: rgba(255,255,245,0.9);
+            padding: 2px 10px;
+            border-radius: 20px;
+            backdrop-filter: blur(2px);
+            pointer-events: none;
         }
         
         .controls {
             display: flex;
-            justify-content: space-between;
-            margin: 20px 0;
-            gap: 12px;
+            gap: 16px;
+            margin: 12px 0 8px;
+            flex-wrap: wrap;
         }
         
         button {
             flex: 1;
-            padding: 14px 18px;
+            padding: 14px 16px;
             border: none;
-            border-radius: 12px;
+            border-radius: 60px;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.95rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
+            transition: all 0.25s ease;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
         }
         
         .btn-primary {
-            background-color: #11c668;
+            background: #11c668;
             color: white;
+            box-shadow: 0 4px 8px rgba(17,198,104,0.25);
         }
         
         .btn-primary:hover {
-            background-color: #0fa856;
+            background: #0d9c50;
             transform: translateY(-2px);
         }
         
+        /* 清空按钮 - 最初的颜色（红色渐变） */
         .btn-secondary {
-            background: linear-gradient(to right, #e74c3c, #e67e22);
+            background: linear-gradient(135deg, #e74c3c, #e67e22);
             color: white;
         }
         
         .btn-secondary:hover {
-            background: linear-gradient(to right, #d62c1a, #d35f0f);
+            background: linear-gradient(135deg, #d62c1a, #d35f0f);
             transform: translateY(-2px);
         }
         
         footer {
             text-align: center;
-            margin-top: 30px;
-            color: #a0aec0;
-            font-size: 0.9rem;
+            margin-top: 32px;
+            color: #5b6e8c;
+            font-size: 0.8rem;
             padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
+            border-top: 1px solid rgba(0,0,0,0.05);
         }
         
-        @media (max-width: 480px) {
+        /* 移动端优化 - 保持所有元素横向并列 */
+        @media (max-width: 560px) {
             body {
-                padding: 15px;
-            }
-            
-            h1 {
-                font-size: 1.6rem;
+                padding: 16px;
             }
             
             .card {
@@ -220,40 +304,133 @@
                 flex-direction: column;
             }
             
-            textarea {
-                min-height: 150px;
+            .controls button {
+                width: 100%;
             }
-
-            .mode-option {
-                padding: 10px 0;
+            
+            .card-title {
+                font-size: 1.1rem;
+            }
+            
+            /* 移动端保持横向布局 */
+            .keyword-row {
+                gap: 12px;
+                padding: 10px 16px;
+            }
+            
+            .keyword-label {
+                padding: 10px 18px;
                 font-size: 0.9rem;
             }
+            
+            .keyword-label i {
+                font-size: 1rem;
+            }
+            
+            #keywordInput {
+                padding: 12px 16px;
+                font-size: 0.95rem;
+            }
+            
+            #keywordInput::placeholder {
+                font-size: 0.9rem;
+            }
+            
+            /* 帮助提示保持横向并列 */
+            .helper-note {
+                font-size: 0.65rem;
+                gap: 6px;
+            }
+            
+            .helper-note i {
+                width: 16px;
+                font-size: 0.65rem;
+            }
+            
+            .weibo-badge {
+                font-size: 0.65rem;
+                padding: 8px 10px;
+                gap: 6px;
+            }
+            
+            textarea {
+                font-size: 0.9rem;
+                padding: 14px;
+                min-height: 150px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .subtitle {
+                font-size: 0.8rem;
+            }
         }
         
-        /* 动画 */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* 超小屏幕调整间距 */
+        @media (max-width: 400px) {
+            .keyword-row {
+                gap: 10px;
+                padding: 8px 12px;
+            }
+            
+            .keyword-label {
+                padding: 8px 14px;
+                font-size: 0.85rem;
+            }
+            
+            .keyword-label i {
+                font-size: 0.9rem;
+            }
+            
+            #keywordInput {
+                padding: 10px 14px;
+                font-size: 0.9rem;
+            }
+            
+            .helper-note {
+                font-size: 0.6rem;
+                gap: 5px;
+            }
         }
         
-        .fade-in {
-            animation: fadeIn 0.5s ease forwards;
+        @keyframes gentleFlash {
+            0% { background-color: rgba(17,198,104,0.1); transform: scale(0.99);}
+            100% { background-color: transparent; transform: scale(1);}
         }
         
-        /* 复制成功提示 */
+        .convert-flash {
+            animation: gentleFlash 0.35s ease forwards;
+        }
+        
         .copy-notification {
             position: fixed;
-            bottom: 20px;
+            bottom: 28px;
             left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background-color: #38a169;
+            transform: translateX(-50%) translateY(90px);
+            background: #11c668;
             color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 12px 28px;
+            border-radius: 60px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
             z-index: 1000;
-            transition: transform 0.4s ease;
+            transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             opacity: 0;
+            font-weight: 500;
+            backdrop-filter: blur(8px);
+            background: rgba(17,198,104,0.94);
+            pointer-events: none;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        @media (max-width: 480px) {
+            .copy-notification {
+                font-size: 0.8rem;
+                padding: 10px 20px;
+                white-space: nowrap;
+            }
         }
         
         .copy-notification.show {
@@ -261,306 +438,333 @@
             opacity: 1;
         }
         
-        /* 自动转换动画 */
-        .auto-convert-animation {
-            position: relative;
-            overflow: hidden;
+        .badge-feature {
+            background: #ecfdf5;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 0.7rem;
+            color: #0b6e41;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         
-        .auto-convert-animation::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #4299e1, transparent);
-            animation: converting 2s infinite;
+        @media (max-width: 560px) {
+            .badge-feature {
+                font-size: 0.6rem;
+                padding: 5px 10px;
+            }
         }
         
-        @keyframes converting {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        @media (pointer: fine) {
-            textarea {
-                background: #f0f0f0;
-            }
-        }
-
-        @media (pointer: coarse) {
-            textarea {
-                background: #f0f0f0;
-            }
+        code {
+            background: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.7rem;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>稀饭文案转换器</h1>
-            <p class="subtitle">换行标记转换 / 提取链接放在末尾</p>
-        </header>
+<div class="container">
+    <header>
+        <h1>稀饭文案转换器</h1>
+    </header>
 
-        <div class="mode-switch fade-in" style="animation-delay: 0.05s">
-            <div class="mode-option" id="modeLineBreak">
-                <i class="fas fa-exchange-alt"></i> 换行符 ➔ 【换行】
-            </div>
-            <div class="mode-option" id="modeLinkExtract">
-                <i class="fas fa-link"></i> 提取链接到末尾
-            </div>
-        </div>
-        
-        <div class="card fade-in">
-            <div class="card-header">
-                <div class="card-icon">
-                    <i class="fas fa-paste"></i>
+    <!-- 关键词输入区块 - 横向并列布局 -->
+    <div class="card" style="padding-bottom: 16px;">
+        <div class="keyword-section">
+            <div class="keyword-row">
+                <div class="keyword-label">
+                    <i class="fas fa-tag"></i> 
+                    <span>关键词分段</span>
                 </div>
-                <h2 class="card-title">输入原文案</h2>
-            </div>
-            <div class="input-container">
-                <textarea id="originalText" placeholder="请粘贴或输入文案（自动转换）……"></textarea>
-                <div class="char-count">
-                    <span id="originalCharCount">0</span> 字符
+                <div class="keyword-input-wrapper">
+                    <input type="text" id="keywordInput" placeholder="输入关键词" autocomplete="off">
                 </div>
             </div>
         </div>
         
-        <div class="card fade-in" style="animation-delay: 0.15s">
-            <div class="card-header">
-                <div class="card-icon">
-                    <i class="fas fa-file-alt"></i>
-                </div>
-                <h2 class="card-title">转换后结果</h2>
+        <!-- 帮助提示区域 - 保持图标和文字横向并列 -->
+        <div class="helper-notes">
+            <div class="helper-note">
+                <i class="fas fa-arrow-right"></i>
+                <span><strong>关键词规则：</strong> 每个关键词后面添加真实换行符（不会被转成【换行】），分隔随机文案。</span>
             </div>
-            <div class="input-container">
-                <textarea id="convertedText" placeholder="结果会自动显示……" readonly></textarea>
-                <div class="char-count">
-                    <span id="convertedCharCount">0</span> 字符
-                </div>
-            </div>
-        </div>
-        
-        <div class="controls fade-in" style="animation-delay: 0.2s">
-            <button class="btn-primary" id="copyBtn">
-                <i class="far fa-copy"></i> 复制结果
-            </button>
-            <button class="btn-secondary" id="clearBtn">
-                <i class="fas fa-eraser"></i> 清空全部
-            </button>
         </div>
     </div>
-    
-    <div class="copy-notification" id="copyNotification">
-        <i class="fas fa-check-circle"></i> 已成功复制到剪贴板！
+
+    <!-- 输入区 -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">
+                <i class="fas fa-paste"></i>
+            </div>
+            <h2 class="card-title">输入原文案</h2>
+        </div>
+        <div class="input-container">
+            <textarea id="originalText" placeholder="请粘贴或输入文案（自动转换）……"></textarea>
+            <div class="char-count"><span id="originalCharCount">0</span> 字</div>
+        </div>
     </div>
 
-    <script>
-        (function() {
-            const originalText = document.getElementById('originalText');
-            const convertedText = document.getElementById('convertedText');
-            const copyBtn = document.getElementById('copyBtn');
-            const clearBtn = document.getElementById('clearBtn');
-            const originalCharCount = document.getElementById('originalCharCount');
-            const convertedCharCount = document.getElementById('convertedCharCount');
-            const copyNotification = document.getElementById('copyNotification');
+    <!-- 转换结果区 -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">
+                <i class="fab fa-weibo"></i>
+            </div>
+            <h2 class="card-title">转换结果</h2>
+        </div>
+        <div class="input-container">
+            <textarea id="convertedText" placeholder="结果会实时生成……" readonly></textarea>
+            <div class="char-count"><span id="convertedCharCount">0</span> 字</div>
+        </div>
+    </div>
 
-            const modeLineBreak = document.getElementById('modeLineBreak');
-            const modeLinkExtract = document.getElementById('modeLinkExtract');
+    <div class="controls">
+        <button class="btn-primary" id="copyBtn"><i class="far fa-copy"></i> 复制结果</button>
+        <button class="btn-secondary" id="clearBtn"><i class="fas fa-eraser"></i> 清空全部</button>
+    </div>
+    <footer>
+        <div class="badge-feature"><i class="fab fa-weibo"></i> 仅用于转换为稀饭文案 </div>
+    </footer>
+</div>
 
-            const STORAGE_KEY = 'preferredConversionMode';
+<div class="copy-notification" id="copyNotification">
+    <i class="fas fa-check-circle"></i> 复制成功
+</div>
 
-            let currentMode = localStorage.getItem(STORAGE_KEY) || 'lineBreak';
+<script>
+    (function() {
+        const originalTextarea = document.getElementById('originalText');
+        const convertedTextarea = document.getElementById('convertedText');
+        const copyBtn = document.getElementById('copyBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const originalCharSpan = document.getElementById('originalCharCount');
+        const convertedCharSpan = document.getElementById('convertedCharCount');
+        const copyNotification = document.getElementById('copyNotification');
+        const keywordInput = document.getElementById('keywordInput');
 
-            function updateCharCount(textarea, countElement) {
-                const count = textarea.value.length;
-                countElement.textContent = count;
-            }
-
-            function showNotification(message, isSuccess) {
-                copyNotification.innerHTML = `<i class="fas fa-${isSuccess ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
-                copyNotification.style.backgroundColor = isSuccess ? '#11c668' : '#e74c3c';
-                copyNotification.classList.add('show');
-                setTimeout(() => {
-                    copyNotification.classList.remove('show');
-                }, 3000);
-            }
-
-            function showConvertAnimation() {
-                const card = document.querySelector('.card:nth-child(4)');
-                if (card) {
-                    card.classList.add('auto-convert-animation');
-                    setTimeout(() => {
-                        card.classList.remove('auto-convert-animation');
-                    }, 800);
-                }
-            }
-
-            function extractUrls(text) {
-                const urls = [];
-                
-                const urlRegex = /https?:\/\/[^\s\u4e00-\u9fa5，。、；：""''（）【】《》！？<>「」『』]+/g;
-                
-                let match;
-                while ((match = urlRegex.exec(text)) !== null) {
-                    let url = match[0];
-                    
-                    url = url.replace(/[，。、；：""''（）【】《》！？<>「」『』,.!?;:()\[\]{}]$/, '');
-                    
-                    urls.push(url);
-                }
-                
-                return urls;
-            }
-
-            function removeUrlsFromText(text) {
-                const urlRegex = /https?:\/\/[^\s\u4e00-\u9fa5，。、；：""''（）【】《》！？<>「」『』]+/g;
-                return text.replace(urlRegex, '');
-            }
-
-            function convertByMode(text) {
-                if (!text) return '';
-
-                if (currentMode === 'lineBreak') {
-                    return text.replace(/\r\n|\r|\n|\[换行\]/g, '【换行】').replace(/\|/g, ' ');
-                } 
-                else {
-                    const urls = extractUrls(text);
-                    
-                    const uniqueUrls = [...new Set(urls)];
-                    
-                    let textWithoutUrls = removeUrlsFromText(text);
-                    
-                    textWithoutUrls = textWithoutUrls
-                        .replace(/\n{3,}/g, '\n\n')
-                        .replace(/[ \t]+$/gm, '')
-                        .replace(/^\n+/, '')
-                        .replace(/\n+$/, '');
-                    
-                    if (uniqueUrls.length === 0) {
-                        return textWithoutUrls;
-                    } else {
-                        if (textWithoutUrls) {
-                            return textWithoutUrls + '\n\n' + uniqueUrls.join('\n');
-                        } else {
-                            return uniqueUrls.join('\n');
-                        }
-                    }
-                }
-            }
-
-            function performConversion() {
-                const original = originalText.value;
-                const converted = convertByMode(original);
-                convertedText.value = converted;
-
-                updateCharCount(originalText, originalCharCount);
-                updateCharCount(convertedText, convertedCharCount);
-                showConvertAnimation();
-            }
-
-            function applyModeToUI() {
-                if (currentMode === 'lineBreak') {
-                    modeLineBreak.classList.add('active');
-                    modeLinkExtract.classList.remove('active');
-                } else {
-                    modeLinkExtract.classList.add('active');
-                    modeLineBreak.classList.remove('active');
-                }
-            }
-
-            function setActiveMode(mode) {
-                if (mode === currentMode) return;
-
-                currentMode = mode;
-                
-                localStorage.setItem(STORAGE_KEY, mode);
-                
-                applyModeToUI();
-
-                performConversion();
-            }
-
-            modeLineBreak.addEventListener('click', function() {
-                setActiveMode('lineBreak');
-            });
-            modeLinkExtract.addEventListener('click', function() {
-                setActiveMode('linkExtract');
-            });
-
-            applyModeToUI();
-
-            updateCharCount(originalText, originalCharCount);
-            updateCharCount(convertedText, convertedCharCount);
-
-            performConversion();
-
-            let conversionTimeout;
-            originalText.addEventListener('input', function() {
-                updateCharCount(originalText, originalCharCount);
-                if (conversionTimeout) clearTimeout(conversionTimeout);
-                conversionTimeout = setTimeout(performConversion, 280);
-            });
-
-            originalText.addEventListener('paste', function() {
-                setTimeout(performConversion, 30);
-            });
-
-            function copyToClipboard() {
-                if (!convertedText.value.trim()) {
-                    showNotification('转换结果为空，无法复制！', false);
-                    return;
-                }
-
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(convertedText.value).then(() => {
-                        showNotification('已成功复制到剪贴板！', true);
-                    }).catch(() => {
-                        fallbackCopy();
-                    });
-                } else {
-                    fallbackCopy();
-                }
-
-                function fallbackCopy() {
-                    convertedText.select();
-                    convertedText.setSelectionRange(0, 99999);
-                    try {
-                        const successful = document.execCommand('copy');
-                        if (successful) {
-                            showNotification('已成功复制到剪贴板！', true);
-                        } else {
-                            showNotification('复制失败，请手动选择并复制', false);
-                        }
-                    } catch (err) {
-                        console.error('复制失败:', err);
-                        showNotification('复制失败，请手动选择并复制', false);
-                    }
-                }
-            }
-
-            copyBtn.addEventListener('click', copyToClipboard);
-
-            function clearAll() {
-                originalText.value = '';
-                convertedText.value = '';
-                updateCharCount(originalText, originalCharCount);
-                updateCharCount(convertedText, convertedCharCount);
-                originalText.focus();
-            }
-            clearBtn.addEventListener('click', clearAll);
-
-            const buttons = document.querySelectorAll('button');
-            buttons.forEach(button => {
-                button.addEventListener('touchstart', function() {
-                    this.style.transform = 'scale(0.98)';
+        const WEIBO_VIDEO_REGEX = /https:\/\/video\.weibo\.com\/show\?fid=[^\s\u4e00-\u9fa5\u3000-\u303f\uff00-\uffef\u2000-\u206f，。、；：""''（）【】《》！？<>「」『』\|\n\r\t]+/g;
+        
+        function getAllWeiboVideoMatches(text) {
+            const matches = [];
+            let match;
+            const regex = new RegExp(WEIBO_VIDEO_REGEX.source, 'g');
+            while ((match = regex.exec(text)) !== null) {
+                let rawUrl = match[0];
+                rawUrl = rawUrl.replace(/[.,;:!?]$/, '');
+                matches.push({
+                    url: rawUrl,
+                    start: match.index,
+                    end: match.index + match[0].length,
                 });
-                button.addEventListener('touchend', function() {
-                    this.style.transform = '';
-                });
-            });
-        })();
-    </script>
+            }
+            return matches;
+        }
+        
+        function extractUniqueWeiboUrls(originalText) {
+            const matches = getAllWeiboVideoMatches(originalText);
+            const urlSet = new Set();
+            const uniqueUrls = [];
+            for (let m of matches) {
+                if (!urlSet.has(m.url)) {
+                    urlSet.add(m.url);
+                    uniqueUrls.push(m.url);
+                }
+            }
+            return uniqueUrls;
+        }
+        
+        function removeWeiboLinksAndSurroundingLineBreaks(originalText) {
+            if (!originalText) return '';
+            
+            const matches = getAllWeiboVideoMatches(originalText);
+            if (matches.length === 0) return originalText;
+            
+            let processed = originalText;
+            
+            for (let i = matches.length - 1; i >= 0; i--) {
+                const match = matches[i];
+                let { start, end } = match;
+                
+                let beforeStart = start;
+                while (beforeStart > 0 && (processed[beforeStart - 1] === '\n' || processed[beforeStart - 1] === '\r')) {
+                    beforeStart--;
+                }
+                
+                let afterEnd = end;
+                while (afterEnd < processed.length && (processed[afterEnd] === '\n' || processed[afterEnd] === '\r')) {
+                    afterEnd++;
+                }
+                
+                const beforePart = processed.substring(0, beforeStart);
+                const afterPart = processed.substring(afterEnd);
+                processed = beforePart + afterPart;
+            }
+            
+            processed = processed.replace(/[ ]{2,}/g, ' ');
+            processed = processed.replace(/\n{3,}/g, '\n\n');
+            return processed;
+        }
+        
+        function convertLineBreaksToTag(text) {
+            if (!text) return '';
+            let normalized = text.replace(/\r\n|\r|\n/g, '\n');
+            let result = normalized.replace(/\n/g, '【换行】');
+            return result;
+        }
+        
+        function addRealLineBreakAfterKeyword(textWithTags, keyword) {
+            if (!textWithTags || !keyword || keyword.trim() === '') {
+                return textWithTags;
+            }
+            
+            const kw = keyword.trim();
+            if (kw === '') return textWithTags;
+            
+            const escapedKw = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const regex = new RegExp(`(${escapedKw})`, 'g');
+            
+            let result = '';
+            let lastIndex = 0;
+            let match;
+            
+            while ((match = regex.exec(textWithTags)) !== null) {
+                const matchEnd = match.index + match[0].length;
+                result += textWithTags.substring(lastIndex, matchEnd);
+                result += '\n';
+                lastIndex = matchEnd;
+            }
+            result += textWithTags.substring(lastIndex);
+            
+            result = result.replace(/\n{3,}/g, '\n\n');
+            return result;
+        }
+        
+        function getFinalConvertedText(rawInput, keyword) {
+            if (!rawInput) return '';
+            
+            const weiboUrls = extractUniqueWeiboUrls(rawInput);
+            
+            let textWithoutWeiboLinks = removeWeiboLinksAndSurroundingLineBreaks(rawInput);
+            
+            let textWithTags = convertLineBreaksToTag(textWithoutWeiboLinks);
+            
+            textWithTags = textWithTags.replace(/(【换行】){3,}/g, '【换行】【换行】');
+            
+            let finalBody = textWithTags;
+            if (keyword && keyword.trim() !== '') {
+                finalBody = addRealLineBreakAfterKeyword(finalBody, keyword);
+                finalBody = finalBody.replace(/^\n+/, '');
+                finalBody = finalBody.replace(/\n+$/, '');
+            }
+            
+            finalBody = finalBody.replace(/^(【换行】)+/, '');
+            finalBody = finalBody.replace(/(【换行】)+$/, '');
+            
+            let result = finalBody;
+            if (weiboUrls.length > 0) {
+                if (result.trim().length > 0) {
+                    result = result.trim() + '\n\n' + weiboUrls.join('\n');
+                } else {
+                    result = weiboUrls.join('\n');
+                }
+            }
+            
+            result = result.replace(/^\s+/, '').replace(/\s+$/, '');
+            return result;
+        }
+        
+        let debounceTimer;
+        
+        function updateConversion() {
+            const raw = originalTextarea.value;
+            const keyword = keywordInput.value;
+            const converted = getFinalConvertedText(raw, keyword);
+            convertedTextarea.value = converted;
+            
+            originalCharSpan.textContent = raw.length;
+            convertedCharSpan.textContent = converted.length;
+            
+            const resultCard = document.querySelectorAll('.card')[2];
+            if (resultCard) {
+                resultCard.classList.add('convert-flash');
+                setTimeout(() => resultCard.classList.remove('convert-flash'), 350);
+            }
+        }
+        
+        function handleInput() {
+            if (debounceTimer) clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                updateConversion();
+            }, 180);
+        }
+        
+        originalTextarea.addEventListener('input', handleInput);
+        keywordInput.addEventListener('input', handleInput);
+        originalTextarea.addEventListener('paste', () => setTimeout(updateConversion, 30));
+        
+        function clearAll() {
+            originalTextarea.value = '';
+            keywordInput.value = '';
+            updateConversion();
+            originalTextarea.focus();
+            showToast('✨ 已清空所有内容', true);
+        }
+        
+        function copyResult() {
+            const resultText = convertedTextarea.value;
+            if (!resultText || resultText.trim() === '') {
+                showToast('❌ 暂无内容可复制', false);
+                return;
+            }
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(resultText).then(() => {
+                    showToast('✅ 已复制到剪贴板', true);
+                }).catch(() => fallbackCopy(resultText));
+            } else {
+                fallbackCopy(resultText);
+            }
+        }
+        
+        function fallbackCopy(text) {
+            convertedTextarea.select();
+            convertedTextarea.setSelectionRange(0, 99999);
+            try {
+                const success = document.execCommand('copy');
+                if (success) showToast('📋 复制成功', true);
+                else showToast('复制失败，请手动复制', false);
+            } catch (e) {
+                showToast('复制异常，请手动选择', false);
+            }
+        }
+        
+        function showToast(message, isSuccess = true) {
+            copyNotification.innerHTML = `<i class="fas ${isSuccess ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i> ${message}`;
+            copyNotification.style.backgroundColor = isSuccess ? '#11c668' : '#e67e22';
+            copyNotification.classList.add('show');
+            setTimeout(() => {
+                copyNotification.classList.remove('show');
+            }, 2300);
+        }
+        
+        copyBtn.addEventListener('click', copyResult);
+        clearBtn.addEventListener('click', clearAll);
+        
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(btn => {
+            btn.addEventListener('touchstart', () => { btn.style.transform = 'scale(0.97)'; });
+            btn.addEventListener('touchend', () => { btn.style.transform = ''; });
+            btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+        });
+        
+        updateConversion();
+    })();
+</script>
 </body>
 </html>
