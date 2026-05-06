@@ -555,12 +555,14 @@
         const keywordInput = document.getElementById('keywordInput');
 
         const WEIBO_VIDEO_REGEX = /https:\/\/video\.weibo\.com\/show\?fid=[^\s\u4e00-\u9fa5\u3000-\u303f\uff00-\uffef\u2000-\u206f，。、；：""''（）【】《》！？<>「」『』\|\n\r\t]+/g;
+        const WEIBO_VIDEO_REGEX2 = /http:\/\/t\.cn\/[^\s\u4e00-\u9fa5\u3000-\u303f\uff00-\uffef\u2000-\u206f，。、；：""''（）【】《》！？<>「」『』\|\n\r\t]+/g;
         
         function getAllWeiboVideoMatches(text) {
             const matches = [];
             let match;
             const regex = new RegExp(WEIBO_VIDEO_REGEX.source, 'g');
-            while ((match = regex.exec(text)) !== null) {
+            const regex2 = new RegExp(WEIBO_VIDEO_REGEX2.source, 'g');
+            while ((match = regex.exec(text) || regex2.exec(text)) !== null) {
                 let rawUrl = match[0];
                 rawUrl = rawUrl.replace(/[.,;:!?]$/, '');
                 matches.push({
