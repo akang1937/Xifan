@@ -242,6 +242,7 @@
             box-shadow: 0 0 0 3px rgba(17,198,104,0.12);
         }
         
+        /* 输入容器：作为绝对定位的参照 */
         .input-container {
             position: relative;
         }
@@ -257,6 +258,19 @@
             border-radius: 20px;
             backdrop-filter: blur(2px);
             pointer-events: none;
+        }
+        
+        /* 逐个转换提示：恢复为原位置（输入框下方、卡片内） */
+        .sequential-hint {
+            font-size: 0.7rem;
+            color: #e67e22;
+            background: #fff4e6;
+            padding: 6px 14px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
         }
         
         .controls {
@@ -311,7 +325,7 @@
             border-top: 1px solid rgba(0,0,0,0.05);
         }
         
-        /* 移动端优化 */
+        /* 移动端优化：保持模式切换横向排布 */
         @media (max-width: 560px) {
             body {
                 padding: 16px;
@@ -380,18 +394,28 @@
                 font-size: 0.8rem;
             }
             
-            /* 移动端模式切换优化 */
+            /* 移动端模式切换保持横向排布 */
             .mode-tabs {
-                flex-direction: column;
-                padding: 6px;
-                border-radius: 24px;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                padding: 4px;
+                border-radius: 40px;
+                gap: 2px;
             }
             
             .mode-tab {
-                padding: 12px 16px;
+                padding: 10px 12px;
                 font-size: 0.9rem;
+                gap: 6px;
+                border-radius: 30px;
+                white-space: nowrap;
+                flex: 1;
+                min-width: 0;
                 justify-content: center;
-                border-radius: 20px;
+            }
+            
+            .mode-tab i {
+                font-size: 0.9rem;
             }
         }
         
@@ -419,6 +443,15 @@
                 font-size: 0.6rem;
                 gap: 5px;
             }
+
+            .mode-tab {
+                padding: 8px 8px;
+                font-size: 0.9rem;
+                gap: 4px;
+            }
+            .mode-tab i {
+                font-size: 0.9rem;
+            }
         }
         
         @keyframes gentleFlash {
@@ -430,25 +463,27 @@
             animation: gentleFlash 0.35s ease forwards;
         }
         
+        /* 提示：改为 absolute，相对 .input-container 居中，与输入框绝对绑定 */
         .copy-notification {
-            position: fixed;
-            bottom: 28px;
+            position: absolute;
             left: 50%;
-            transform: translateX(-50%) translateY(90px);
-            background: #11c668;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(0.92);
+            background: rgba(17,198,104,0.94);
             color: white;
             padding: 12px 28px;
             border-radius: 60px;
             box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
-            z-index: 1000;
-            transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            z-index: 2000;
+            transition: transform 0.22s cubic-bezier(0.2, 0.9, 0.4, 1.1), opacity 0.22s ease;
             opacity: 0;
             font-weight: 500;
             backdrop-filter: blur(8px);
-            background: rgba(17,198,104,0.94);
             pointer-events: none;
             font-size: 0.9rem;
             white-space: nowrap;
+            max-width: 92%;
+            text-align: center;
         }
         
         @media (max-width: 480px) {
@@ -460,7 +495,7 @@
         }
         
         .copy-notification.show {
-            transform: translateX(-50%) translateY(0);
+            transform: translate(-50%, -50%) scale(1);
             opacity: 1;
         }
         
@@ -491,21 +526,7 @@
             font-family: monospace;
             font-size: 0.7rem;
         }
-        
-        /* 逐个转换模式下的原文输入框提示 */
-        .sequential-hint {
-            font-size: 0.7rem;
-            color: #e67e22;
-            background: #fff4e6;
-            padding: 6px 14px;
-            border-radius: 30px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 8px;
-        }
 
-        /* 工具类 */
         .hidden {
             display: none !important;
         }
@@ -559,10 +580,15 @@
             <h2 class="card-title">输入原文案</h2>
         </div>
         <div class="input-container">
-            <!-- 默认 placeholder 为批量模式文案，后续通过 JS 切换 -->
             <textarea id="originalText" placeholder="请粘贴或输入文案（自动转换）……"></textarea>
             <div class="char-count"><span id="originalCharCount">0</span> 字</div>
+
+            <!-- 提示已移入原文输入容器，绝对居中，与输入框绑定 -->
+            <div class="copy-notification" id="copyNotification">
+                <i class="fas fa-check-circle"></i> 复制成功
+            </div>
         </div>
+        <!-- 逐个转换提示：输入框下方 -->
         <div id="sequentialHint" class="sequential-hint hidden">
             <i class="fas fa-info-circle"></i> 逐个转换模式：粘贴后自动追加到结果，并清空此输入框
         </div>
@@ -591,10 +617,6 @@
     </footer>
 </div>
 
-<div class="copy-notification" id="copyNotification">
-    <i class="fas fa-check-circle"></i> 复制成功
-</div>
-
 <script>
     (function() {
         const originalTextarea = document.getElementById('originalText');
@@ -612,6 +634,12 @@
         let currentMode = 'batch';
         let debounceTimer;
 
+        let lastSequentialLength = 0;
+        let isProgrammaticClear = false;
+        let lastOneShotTime = 0;
+
+        const ONE_SHOT_DELTA_THRESHOLD = 4;
+
         const modeTabs = document.querySelectorAll('.mode-tab');
 
         function updatePlaceholder(mode) {
@@ -623,10 +651,13 @@
         }
 
         function clearInputAndResult() {
+            isProgrammaticClear = true;
             originalTextarea.value = '';
             convertedTextarea.value = '';
             originalCharSpan.textContent = '0';
             convertedCharSpan.textContent = '0';
+            lastSequentialLength = 0;
+            setTimeout(() => { isProgrammaticClear = false; }, 0);
         }
 
         function setMode(mode, persist = true) {
@@ -648,6 +679,7 @@
             if (mode === 'sequential') {
                 keywordCard.classList.add('hidden');
                 sequentialHint.classList.remove('hidden');
+                lastSequentialLength = originalTextarea.value.length;
             } else {
                 keywordCard.classList.remove('hidden');
                 sequentialHint.classList.add('hidden');
@@ -817,10 +849,13 @@
             return result;
         }
 
-        function appendSequentialConverted(rawInput, keyword) {
+        function appendSequentialConverted(rawInput) {
             if (!rawInput || rawInput.trim() === '') {
+                isProgrammaticClear = true;
                 originalTextarea.value = '';
                 originalCharSpan.textContent = '0';
+                lastSequentialLength = 0;
+                setTimeout(() => { isProgrammaticClear = false; }, 0);
                 return false;
             }
 
@@ -837,8 +872,11 @@
             convertedTextarea.value = newResult;
             convertedCharSpan.textContent = newResult.length;
 
+            isProgrammaticClear = true;
             originalTextarea.value = '';
             originalCharSpan.textContent = '0';
+            lastSequentialLength = 0;
+            setTimeout(() => { isProgrammaticClear = false; }, 0);
 
             const resultCard = document.querySelectorAll('.card')[2];
             if (resultCard) {
@@ -868,32 +906,62 @@
             }
         }
 
-        originalTextarea.addEventListener('input', function() {
+        function isOneShotInput(e, delta) {
+            if (!e) return false;
+            const t = e.inputType;
+            if (t === 'insertFromPaste' ||
+                t === 'insertFromPasteAsQuotation' ||
+                t === 'insertFromDrop' ||
+                t === 'insertFromYank' ||
+                t === 'insertReplacementText') {
+                return true;
+            }
+            if (delta >= ONE_SHOT_DELTA_THRESHOLD) {
+                return true;
+            }
+            return false;
+        }
+
+        originalTextarea.addEventListener('input', function(e) {
+            if (isProgrammaticClear) return;
+
             const raw = originalTextarea.value;
-            originalCharSpan.textContent = raw.length;
-            
+            const currentLength = raw.length;
+
             if (currentMode === 'batch') {
+                originalCharSpan.textContent = currentLength;
                 if (debounceTimer) clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     updateBatchConversion(true);
                 }, 180);
+                lastSequentialLength = currentLength;
+                return;
+            }
+
+            const delta = currentLength - lastSequentialLength;
+            lastSequentialLength = currentLength;
+            originalCharSpan.textContent = currentLength;
+
+            if (isOneShotInput(e, delta)) {
+                lastOneShotTime = Date.now();
+                if (raw && raw.trim() !== '') {
+                    appendSequentialConverted(raw);
+                }
             }
         });
 
         originalTextarea.addEventListener('paste', function() {
+            if (currentMode !== 'sequential') return;
+            if (isProgrammaticClear) return;
+
             setTimeout(() => {
-                if (currentMode === 'sequential') {
-                    const raw = originalTextarea.value;
-                    if (raw.trim() !== '') {
-                        appendSequentialConverted(raw, '');
-                    } else {
-                        originalTextarea.value = '';
-                        originalCharSpan.textContent = '0';
-                    }
-                } else {
-                    updateBatchConversion(true);
+                if (Date.now() - lastOneShotTime < 250) return;
+                const raw = originalTextarea.value;
+                if (raw && raw.trim() !== '') {
+                    lastOneShotTime = Date.now();
+                    appendSequentialConverted(raw);
                 }
-            }, 30);
+            }, 40);
         });
 
         keywordInput.addEventListener('input', function() {
@@ -906,11 +974,14 @@
         });
 
         function clearAll() {
+            isProgrammaticClear = true;
             originalTextarea.value = '';
             keywordInput.value = '';
             convertedTextarea.value = '';
             originalCharSpan.textContent = '0';
             convertedCharSpan.textContent = '0';
+            lastSequentialLength = 0;
+            setTimeout(() => { isProgrammaticClear = false; }, 0);
             originalTextarea.focus();
             showToast('✨ 已清空所有内容', true);
         }
@@ -945,7 +1016,7 @@
         
         function showToast(message, isSuccess = true) {
             copyNotification.innerHTML = `<i class="fas ${isSuccess ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i> ${message}`;
-            copyNotification.style.backgroundColor = isSuccess ? '#11c668' : '#e67e22';
+            copyNotification.style.backgroundColor = isSuccess ? 'rgba(17,198,104,0.94)' : 'rgba(230,126,34,0.94)';
             copyNotification.classList.add('show');
             setTimeout(() => {
                 copyNotification.classList.remove('show');
@@ -968,10 +1039,13 @@
                 if (currentMode === 'sequential') {
                     const raw = originalTextarea.value;
                     if (raw.trim() !== '') {
-                        appendSequentialConverted(raw, '');
+                        appendSequentialConverted(raw);
                     } else {
+                        isProgrammaticClear = true;
                         originalTextarea.value = '';
                         originalCharSpan.textContent = '0';
+                        lastSequentialLength = 0;
+                        setTimeout(() => { isProgrammaticClear = false; }, 0);
                     }
                 }
             }
