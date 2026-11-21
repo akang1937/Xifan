@@ -42,16 +42,6 @@
             letter-spacing: -0.3px;
         }
         
-        .subtitle {
-            color: #2c3e50;
-            font-size: 0.9rem;
-            background: rgba(255,255,245,0.8);
-            display: inline-block;
-            padding: 4px 20px;
-            border-radius: 40px;
-            backdrop-filter: blur(2px);
-        }
-
         .subtitle2 {
             color: #718096;
             font-size: 0.95rem;
@@ -91,6 +81,51 @@
             font-size: 1.25rem;
             font-weight: 600;
             color: #1e293b;
+        }
+
+        /* 大号模式切换 */
+        .mode-tabs {
+            display: flex;
+            background: #eef2f6;
+            border-radius: 60px;
+            padding: 6px;
+            margin-bottom: 24px;
+            gap: 4px;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .mode-tab {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 20px;
+            border-radius: 60px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border: none;
+            background: transparent;
+            white-space: nowrap;
+            outline: none;
+        }
+
+        .mode-tab i {
+            font-size: 1.1rem;
+        }
+
+        .mode-tab.active {
+            background: #ffffff;
+            color: #02b458;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            font-weight: 600;
+        }
+
+        .mode-tab.active i {
+            color: #02b458;
         }
         
         /* 关键词区域 - 横向并列布局 */
@@ -153,7 +188,6 @@
             font-size: 0.95rem;
         }
         
-        /* 帮助提示区域 - 保持横向并列 */
         .helper-notes {
             margin-top: 12px;
         }
@@ -187,23 +221,6 @@
         .helper-note span {
             flex: 1;
             line-height: 1.4;
-        }
-        
-        .weibo-badge {
-            background: #fdf2f0;
-            border-left: 3px solid #ff6b6b;
-            padding: 10px 12px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            margin-top: 12px;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-        }
-        
-        .weibo-badge i {
-            flex-shrink: 0;
-            margin-top: 2px;
         }
         
         textarea {
@@ -275,7 +292,6 @@
             transform: translateY(-2px);
         }
         
-        /* 清空按钮 - 最初的颜色（红色渐变） */
         .btn-secondary {
             background: linear-gradient(135deg, #e74c3c, #e67e22);
             color: white;
@@ -295,7 +311,7 @@
             border-top: 1px solid rgba(0,0,0,0.05);
         }
         
-        /* 移动端优化 - 保持所有元素横向并列 */
+        /* 移动端优化 */
         @media (max-width: 560px) {
             body {
                 padding: 16px;
@@ -317,7 +333,6 @@
                 font-size: 1.1rem;
             }
             
-            /* 移动端保持横向布局 */
             .keyword-row {
                 gap: 12px;
                 padding: 10px 16px;
@@ -341,7 +356,6 @@
                 font-size: 0.9rem;
             }
             
-            /* 帮助提示保持横向并列 */
             .helper-note {
                 font-size: 0.65rem;
                 gap: 6px;
@@ -350,12 +364,6 @@
             .helper-note i {
                 width: 16px;
                 font-size: 0.65rem;
-            }
-            
-            .weibo-badge {
-                font-size: 0.65rem;
-                padding: 8px 10px;
-                gap: 6px;
             }
             
             textarea {
@@ -368,12 +376,25 @@
                 font-size: 1.5rem;
             }
             
-            .subtitle {
+            .subtitle2 {
                 font-size: 0.8rem;
+            }
+            
+            /* 移动端模式切换优化 */
+            .mode-tabs {
+                flex-direction: column;
+                padding: 6px;
+                border-radius: 24px;
+            }
+            
+            .mode-tab {
+                padding: 12px 16px;
+                font-size: 0.9rem;
+                justify-content: center;
+                border-radius: 20px;
             }
         }
         
-        /* 超小屏幕调整间距 */
         @media (max-width: 400px) {
             .keyword-row {
                 gap: 10px;
@@ -470,6 +491,24 @@
             font-family: monospace;
             font-size: 0.7rem;
         }
+        
+        /* 逐个转换模式下的原文输入框提示 */
+        .sequential-hint {
+            font-size: 0.7rem;
+            color: #e67e22;
+            background: #fff4e6;
+            padding: 6px 14px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        /* 工具类 */
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
@@ -479,8 +518,18 @@
         <p class="subtitle2">仅用于转换——需要保留换行格式的文案</p>
     </header>
 
-    <!-- 关键词输入区块 - 横向并列布局 -->
-    <div class="card" style="padding-bottom: 16px;">
+    <!-- 大号模式切换 -->
+    <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="batch">
+            <i class="fas fa-layer-group"></i> 批量转换
+        </button>
+        <button class="mode-tab" data-mode="sequential">
+            <i class="fas fa-arrow-right-to-bracket"></i> 逐个转换
+        </button>
+    </div>
+
+    <!-- 关键词输入区块（逐个模式下隐藏） -->
+    <div class="card" id="keywordCard" style="padding-bottom: 16px;">
         <div class="keyword-section">
             <div class="keyword-row">
                 <div class="keyword-label">
@@ -493,7 +542,6 @@
             </div>
         </div>
         
-        <!-- 帮助提示区域 - 保持图标和文字横向并列 -->
         <div class="helper-notes">
             <div class="helper-note">
                 <i class="fas fa-arrow-right"></i>
@@ -511,8 +559,12 @@
             <h2 class="card-title">输入原文案</h2>
         </div>
         <div class="input-container">
+            <!-- 默认 placeholder 为批量模式文案，后续通过 JS 切换 -->
             <textarea id="originalText" placeholder="请粘贴或输入文案（自动转换）……"></textarea>
             <div class="char-count"><span id="originalCharCount">0</span> 字</div>
+        </div>
+        <div id="sequentialHint" class="sequential-hint hidden">
+            <i class="fas fa-info-circle"></i> 逐个转换模式：粘贴后自动追加到结果，并清空此输入框
         </div>
     </div>
 
@@ -553,6 +605,84 @@
         const convertedCharSpan = document.getElementById('convertedCharCount');
         const copyNotification = document.getElementById('copyNotification');
         const keywordInput = document.getElementById('keywordInput');
+        const keywordCard = document.getElementById('keywordCard');
+        const sequentialHint = document.getElementById('sequentialHint');
+
+        const MODE_KEY = 'converter_mode';
+        let currentMode = 'batch';
+        let debounceTimer;
+
+        const modeTabs = document.querySelectorAll('.mode-tab');
+
+        function updatePlaceholder(mode) {
+            if (mode === 'sequential') {
+                originalTextarea.placeholder = '请逐个粘贴单个文案';
+            } else {
+                originalTextarea.placeholder = '请粘贴或输入文案（自动转换）……';
+            }
+        }
+
+        function clearInputAndResult() {
+            originalTextarea.value = '';
+            convertedTextarea.value = '';
+            originalCharSpan.textContent = '0';
+            convertedCharSpan.textContent = '0';
+        }
+
+        function setMode(mode, persist = true) {
+            if (mode !== 'batch' && mode !== 'sequential') return;
+            
+            if (currentMode === mode && persist) return;
+
+            currentMode = mode;
+
+            modeTabs.forEach(tab => {
+                const tabMode = tab.dataset.mode;
+                if (tabMode === mode) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            if (mode === 'sequential') {
+                keywordCard.classList.add('hidden');
+                sequentialHint.classList.remove('hidden');
+            } else {
+                keywordCard.classList.remove('hidden');
+                sequentialHint.classList.add('hidden');
+            }
+
+            updatePlaceholder(mode);
+
+            if (persist) {
+                try {
+                    localStorage.setItem(MODE_KEY, mode);
+                } catch (e) {}
+            }
+        }
+
+        function restoreMode() {
+            try {
+                const saved = localStorage.getItem(MODE_KEY);
+                if (saved === 'sequential' || saved === 'batch') {
+                    setMode(saved, false);
+                    return;
+                }
+            } catch (e) {}
+            setMode('batch', false);
+        }
+
+        modeTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const mode = tab.dataset.mode;
+                if (mode === currentMode) return;
+
+                clearInputAndResult();
+
+                setMode(mode, true);
+            });
+        });
 
         const WEIBO_VIDEO_REGEX = /https:\/\/video\.weibo\.com\/show\?fid=[^\s\u4e00-\u9fa5\u3000-\u303f\uff00-\uffef\u2000-\u206f，。、；：""''（）【】《》！？<>「」『』\|\n\r\t]+/g;
         const WEIBO_VIDEO_REGEX2 = /http:\/\/t\.cn\/[^\s\u4e00-\u9fa5\u3000-\u303f\uff00-\uffef\u2000-\u206f，。、；：""''（）【】《》！？<>「」『』\|\n\r\t]+/g;
@@ -686,10 +816,41 @@
             result = result.replace(/^\s+/, '').replace(/\s+$/, '');
             return result;
         }
-        
-        let debounceTimer;
-        
-        function updateConversion() {
+
+        function appendSequentialConverted(rawInput, keyword) {
+            if (!rawInput || rawInput.trim() === '') {
+                originalTextarea.value = '';
+                originalCharSpan.textContent = '0';
+                return false;
+            }
+
+            const converted = getFinalConvertedText(rawInput, '');
+
+            let currentResult = convertedTextarea.value;
+            let newResult;
+            if (currentResult.trim() === '') {
+                newResult = converted;
+            } else {
+                newResult = currentResult + '\n' + converted;
+            }
+
+            convertedTextarea.value = newResult;
+            convertedCharSpan.textContent = newResult.length;
+
+            originalTextarea.value = '';
+            originalCharSpan.textContent = '0';
+
+            const resultCard = document.querySelectorAll('.card')[2];
+            if (resultCard) {
+                resultCard.classList.add('convert-flash');
+                setTimeout(() => resultCard.classList.remove('convert-flash'), 350);
+            }
+
+            showToast('📋 已追加到结果', true);
+            return true;
+        }
+
+        function updateBatchConversion(flash = true) {
             const raw = originalTextarea.value;
             const keyword = keywordInput.value;
             const converted = getFinalConvertedText(raw, keyword);
@@ -698,32 +859,62 @@
             originalCharSpan.textContent = raw.length;
             convertedCharSpan.textContent = converted.length;
             
-            const resultCard = document.querySelectorAll('.card')[2];
-            if (resultCard) {
-                resultCard.classList.add('convert-flash');
-                setTimeout(() => resultCard.classList.remove('convert-flash'), 350);
+            if (flash) {
+                const resultCard = document.querySelectorAll('.card')[2];
+                if (resultCard) {
+                    resultCard.classList.add('convert-flash');
+                    setTimeout(() => resultCard.classList.remove('convert-flash'), 350);
+                }
             }
         }
-        
-        function handleInput() {
-            if (debounceTimer) clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => {
-                updateConversion();
-            }, 180);
-        }
-        
-        originalTextarea.addEventListener('input', handleInput);
-        keywordInput.addEventListener('input', handleInput);
-        originalTextarea.addEventListener('paste', () => setTimeout(updateConversion, 30));
-        
+
+        originalTextarea.addEventListener('input', function() {
+            const raw = originalTextarea.value;
+            originalCharSpan.textContent = raw.length;
+            
+            if (currentMode === 'batch') {
+                if (debounceTimer) clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    updateBatchConversion(true);
+                }, 180);
+            }
+        });
+
+        originalTextarea.addEventListener('paste', function() {
+            setTimeout(() => {
+                if (currentMode === 'sequential') {
+                    const raw = originalTextarea.value;
+                    if (raw.trim() !== '') {
+                        appendSequentialConverted(raw, '');
+                    } else {
+                        originalTextarea.value = '';
+                        originalCharSpan.textContent = '0';
+                    }
+                } else {
+                    updateBatchConversion(true);
+                }
+            }, 30);
+        });
+
+        keywordInput.addEventListener('input', function() {
+            if (currentMode === 'batch') {
+                if (debounceTimer) clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    updateBatchConversion(true);
+                }, 180);
+            }
+        });
+
         function clearAll() {
             originalTextarea.value = '';
             keywordInput.value = '';
-            updateConversion();
+            convertedTextarea.value = '';
+            originalCharSpan.textContent = '0';
+            convertedCharSpan.textContent = '0';
             originalTextarea.focus();
             showToast('✨ 已清空所有内容', true);
         }
-        
+
         function copyResult() {
             const resultText = convertedTextarea.value;
             if (!resultText || resultText.trim() === '') {
@@ -760,18 +951,39 @@
                 copyNotification.classList.remove('show');
             }, 2300);
         }
-        
+
         copyBtn.addEventListener('click', copyResult);
         clearBtn.addEventListener('click', clearAll);
-        
+
         const buttons = document.querySelectorAll('button');
         buttons.forEach(btn => {
             btn.addEventListener('touchstart', () => { btn.style.transform = 'scale(0.97)'; });
             btn.addEventListener('touchend', () => { btn.style.transform = ''; });
             btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
         });
-        
-        updateConversion();
+
+        originalTextarea.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                e.preventDefault();
+                if (currentMode === 'sequential') {
+                    const raw = originalTextarea.value;
+                    if (raw.trim() !== '') {
+                        appendSequentialConverted(raw, '');
+                    } else {
+                        originalTextarea.value = '';
+                        originalCharSpan.textContent = '0';
+                    }
+                }
+            }
+        });
+
+        restoreMode();
+        originalCharSpan.textContent = '0';
+        convertedCharSpan.textContent = '0';
+
+        if (currentMode === 'batch') {
+            updateBatchConversion(false);
+        }
     })();
 </script>
 </body>
